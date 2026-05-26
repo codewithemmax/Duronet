@@ -13,7 +13,7 @@ Before implementing any feature or making architectural decisions, you must read
 4. `context/code-standards.md` — Implementation rules and conventions.
 5. `context/ai-workflow-rules.md` — Development workflow, scoping rules, and delivery approach.
 6. `context/specs/master-build-plan.md` — The 7-unit implementation plan.
-7. `progress-tracker.md` — Current phase, completed work, open questions, and next steps.
+7. `context/progress-tracker.md` — Current phase, completed work, open questions, and next steps.
 
 ## 2. Immutable Project Invariants (The "Stay on Job" Directives)
 * **Decoupled Architecture:** The Next.js frontend (`duronet-client`) and Node.js backend (`duronet-server`) must remain completely separate. Never mix their logic.

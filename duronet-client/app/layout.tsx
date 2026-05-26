@@ -8,6 +8,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "DuroNet | Supply Chain Resilience",
   description: "Decoupled medical supply chain resilience application",
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 export default function RootLayout({

@@ -34,8 +34,9 @@ export function Sidebar({ activeTab, setActiveTab, onModuleClick }: SidebarProps
   };
 
   return (
-    <aside className="w-64 border-r border-border bg-card flex flex-col shrink-0">
-      <div className="p-6 border-b border-border">
+    <aside className="hidden md:flex w-64 border-r border-border bg-card flex-col shrink-0">
+      <div className="p-6 border-b border-border flex items-center gap-2">
+        <img src="/duronet-icon.svg" alt="DuroNet Icon" className="h-8 w-8" />
         <h1 className="text-2xl font-bold text-primary tracking-tight">DuroNet</h1>
       </div>
       <nav className="flex-1 p-4 overflow-y-auto">

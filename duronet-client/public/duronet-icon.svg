@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <polygon points="992.687,682.715 900.187,842.929 715.187,842.929 622.687,682.715 715.187,522.500 900.187,522.500" fill="#0D9488" stroke="white" stroke-width="12" stroke-linejoin="round"/>
+  <polygon points="697.000,853.429 604.500,1013.644 419.500,1013.644 327.000,853.429 419.500,693.215 604.500,693.215" fill="#0F766E" stroke="white" stroke-width="12" stroke-linejoin="round"/>
+  <polygon points="401.313,682.715 308.813,842.929 123.813,842.929 31.313,682.715 123.813,522.500 308.813,522.500" fill="#0D9488" stroke="white" stroke-width="12" stroke-linejoin="round"/>
+  <polygon points="401.313,341.285 308.813,501.500 123.813,501.500 31.313,341.285 123.813,181.071 308.813,181.071" fill="#0F766E" stroke="white" stroke-width="12" stroke-linejoin="round"/>
+  <polygon points="697.000,170.571 604.500,330.785 419.500,330.785 327.000,170.571 419.500,10.356 604.500,10.356" fill="#0D9488" stroke="white" stroke-width="12" stroke-linejoin="round"/>
+  <polygon points="992.687,341.285 900.187,501.500 715.187,501.500 622.687,341.285 715.187,181.071 900.187,181.071" fill="#0F766E" stroke="white" stroke-width="12" stroke-linejoin="round"/>
+  <polygon points="697.000,512.000 604.500,672.215 419.500,672.215 327.000,512.000 419.500,351.785 604.500,351.785" fill="#065F46" stroke="white" stroke-width="12" stroke-linejoin="round"/>
+  <polygon points="681.000,512.000 596.500,658.358 427.500,658.358 343.000,512.000 427.500,365.642 596.500,365.642" fill="black"/>
+  <text x="512.0" y="512.0" text-anchor="middle" dominant-baseline="central" font-family="DejaVu Sans, Arial Black, sans-serif" font-weight="bold" font-size="170" fill="white"  dy="8">D</text>
+</svg>
