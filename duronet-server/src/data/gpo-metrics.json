@@ -1,0 +1,34 @@
+[
+  {
+    "supplierId": "SUP-001",
+    "supplierName": "MedPharma Corp",
+    "reliabilityScore": 95,
+    "purchaseVolume": 125000,
+    "leadTime": 7,
+    "region": "North America"
+  },
+  {
+    "supplierId": "SUP-002",
+    "supplierName": "Global Health Supplies",
+    "reliabilityScore": 72,
+    "purchaseVolume": 45000,
+    "leadTime": 14,
+    "region": "Europe"
+  },
+  {
+    "supplierId": "SUP-003",
+    "supplierName": "CareEquip Logistics",
+    "reliabilityScore": 88,
+    "purchaseVolume": 98000,
+    "leadTime": 10,
+    "region": "Asia-Pacific"
+  },
+  {
+    "supplierId": "SUP-004",
+    "supplierName": "Apex Medical Manufacturing",
+    "reliabilityScore": 55,
+    "purchaseVolume": 32000,
+    "leadTime": 21,
+    "region": "LATAM"
+  }
+]

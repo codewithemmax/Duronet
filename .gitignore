@@ -1,0 +1,13 @@
+.env
+node_modules
+dist
+build
+coverage
+
+.env.local
+./dist
+./build
+*.log
+*.tmp
+.DS_Store
+.idea

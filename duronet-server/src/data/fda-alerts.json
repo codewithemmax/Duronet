@@ -1,0 +1,38 @@
+[
+  {
+    "id": "FDA-2026-001",
+    "date": "2026-05-18",
+    "product": "Epinephrine Auto-Injector",
+    "manufacturer": "Mylan Inc.",
+    "reason": "Device malfunction reported in multiple units. Class I Recall issued due to potential failure during critical supply delivery.",
+    "severity": "critical",
+    "affectedHospitals": [
+      { "name": "City General", "coordinates": [-80.20, 40.30] },
+      { "name": "Memorial Health", "coordinates": [-80.10, 40.20] }
+    ]
+  },
+  {
+    "id": "FDA-2026-002",
+    "date": "2026-05-20",
+    "product": "Lidocaine HCl Injection",
+    "manufacturer": "Hospira Inc.",
+    "reason": "Batch testing revealed subpotent concentration. Class II Recall for regional distribution affecting GPO contracts.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "Northside Clinic", "coordinates": [-87.90, 42.30] },
+      { "name": "County Hospital", "coordinates": [-87.75, 42.20] }
+    ]
+  },
+  {
+    "id": "FDA-2026-003",
+    "date": "2026-05-22",
+    "product": "Ibuprofen 800mg Tablets",
+    "manufacturer": "Actavis Pharma",
+    "reason": "Labeling mix-up on supplier shipment. Class III Recall. Low severity but requires supplier verification.",
+    "severity": "medium",
+    "affectedHospitals": [
+      { "name": "Eastside Medical", "coordinates": [-74.45, 40.90] },
+      { "name": "Valley Care", "coordinates": [-74.35, 40.80] }
+    ]
+  }
+]

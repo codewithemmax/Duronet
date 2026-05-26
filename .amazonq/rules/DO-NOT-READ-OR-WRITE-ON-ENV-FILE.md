@@ -1,0 +1,1 @@
+Do not read or write on the env files

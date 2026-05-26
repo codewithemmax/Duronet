@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Strict Dark Mode Emerald/Teal Theme as per ui-context.md */
+    --bg-base: #0f172a;
+    --bg-surface: #1e293b;
+    --text-primary: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent-emerald: #10b981;
+    --accent-teal: #14b8a6;
+    --border-default: #334155;
+    --state-error: #ef4444;
+    --state-warning: #f59e0b;
+    --state-success: #10b981;
+    
+    /* Mapping to shadcn/ui generic vars */
+    --background: 222 47% 11%;     /* #0f172a */
+    --foreground: 210 40% 98%;     /* #f8fafc */
+    
+    --card: 215 32% 17%;           /* #1e293b */
+    --card-foreground: 210 40% 98%;/* #f8fafc */
+    
+    --popover: 215 32% 17%;
+    --popover-foreground: 210 40% 98%;
+    
+    --primary: 160 84% 39%;        /* #10b981 */
+    --primary-foreground: 222 47% 11%;
+    
+    --secondary: 174 80% 40%;      /* #14b8a6 */
+    --secondary-foreground: 222 47% 11%;
+    
+    --muted: 215 32% 17%;
+    --muted-foreground: 215 20% 65%; /* #94a3b8 */
+    
+    --accent: 215 32% 17%;
+    --accent-foreground: 210 40% 98%;
+    
+    --destructive: 0 84% 60%;      /* #ef4444 */
+    --destructive-foreground: 210 40% 98%;
+    
+    --border: 215 25% 27%;         /* #334155 */
+    --input: 215 25% 27%;
+    --ring: 160 84% 39%;
+    
+    --radius: 0.375rem; /* rounded-md */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    /* Firefox Scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--primary) / 0.5) transparent;
+  }
+  
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    @apply antialiased;
+  }
+
+  /* Chrome, Edge, and Safari Custom Scrollbar */
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--primary) / 0.4);
+    border-radius: 8px;
+    border: 2px solid hsl(var(--background)); /* Uses your #0f172a background variable */
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--primary) / 0.7);
+  }
+}
