@@ -11,3 +11,4 @@ coverage
 *.tmp
 .DS_Store
 .idea
+.next

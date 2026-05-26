@@ -18,6 +18,7 @@ import { AIAnalysisDisplay } from "@/components/AIAnalysisDisplay";
 import { GlobalThreatRadar } from "@/components/GlobalThreatRadar";
 import { RiskMatrix } from "@/components/RiskMatrix";
 import { FivetranConnectors } from "@/components/FivetranConnectors";
+import { ProjectSettings } from "@/components/ProjectSettings";
 import { fetchFdaAlerts, analyzeAlert, deployFivetranConfig } from "@/lib/api";
 import { toast } from "sonner";
 
