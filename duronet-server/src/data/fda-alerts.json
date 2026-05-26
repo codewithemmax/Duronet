@@ -34,5 +34,1169 @@
       { "name": "Eastside Medical", "coordinates": [-74.45, 40.90] },
       { "name": "Valley Care", "coordinates": [-74.35, 40.80] }
     ]
+  },
+  {
+    "id": "FDA-2026-004",
+    "date": "2026-05-23",
+    "product": "Insulin Glargine",
+    "manufacturer": "Novo Nordisk",
+    "reason": "Temperature excursion during transport compromised efficacy.",
+    "severity": "critical",
+    "affectedHospitals": [
+      { "name": "Westside Clinic", "coordinates": [-118.25, 34.05] },
+      { "name": "Pacific Health", "coordinates": [-118.15, 34.15] }
+    ]
+  },
+  {
+    "id": "FDA-2026-005",
+    "date": "2026-05-23",
+    "product": "Propofol Injectable Emulsion",
+    "manufacturer": "Fresenius Kabi",
+    "reason": "Particulate matter observed in vials.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "Central Medical", "coordinates": [-90.10, 29.95] },
+      { "name": "Delta Care", "coordinates": [-90.00, 29.85] }
+    ]
+  },
+  {
+    "id": "FDA-2026-006",
+    "date": "2026-05-24",
+    "product": "Amoxicillin Oral Suspension",
+    "manufacturer": "Teva Pharmaceuticals",
+    "reason": "Incorrect dosing cup packaged with medication.",
+    "severity": "medium",
+    "affectedHospitals": [
+      { "name": "Northern Care", "coordinates": [-93.20, 44.90] },
+      { "name": "Twin Cities Med", "coordinates": [-93.10, 44.80] }
+    ]
+  },
+  {
+    "id": "FDA-2026-007",
+    "date": "2026-05-24",
+    "product": "Morphine Sulfate Injection",
+    "manufacturer": "Pfizer",
+    "reason": "Cross-contamination with trace amounts of muscle relaxant.",
+    "severity": "critical",
+    "affectedHospitals": [
+      { "name": "Boston General", "coordinates": [-71.05, 42.36] },
+      { "name": "New England Health", "coordinates": [-71.15, 42.46] }
+    ]
+  },
+  {
+    "id": "FDA-2026-008",
+    "date": "2026-05-25",
+    "product": "Heparin Sodium Injection",
+    "manufacturer": "Baxter Healthcare",
+    "reason": "Potential lack of sterility assurance.",
+    "severity": "critical",
+    "affectedHospitals": [
+      { "name": "Chicago Metro Health", "coordinates": [-87.62, 41.87] },
+      { "name": "Lakeside Medical", "coordinates": [-87.52, 41.77] }
+    ]
+  },
+  {
+    "id": "FDA-2026-009",
+    "date": "2026-05-25",
+    "product": "Lorazepam Tablets",
+    "manufacturer": "Sandoz",
+    "reason": "Failed dissolution specifications at 6-month stability testing.",
+    "severity": "low",
+    "affectedHospitals": [
+      { "name": "Denver Health", "coordinates": [-104.99, 39.73] },
+      { "name": "Mountain View Care", "coordinates": [-104.89, 39.83] }
+    ]
+  },
+  {
+    "id": "FDA-2026-010",
+    "date": "2026-05-25",
+    "product": "Ceftriaxone for Injection",
+    "manufacturer": "Aurobindo Pharma",
+    "reason": "Presence of glass particulate matter.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "Houston Medical Center", "coordinates": [-95.36, 29.76] },
+      { "name": "Texas Health", "coordinates": [-95.26, 29.86] }
+    ]
+  },
+  {
+    "id": "FDA-2026-011",
+    "date": "2026-05-26",
+    "product": "Albuterol Inhalation Solution",
+    "manufacturer": "Mylan Inc.",
+    "reason": "Defective nebulizer interface causing reduced output.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "Seattle General", "coordinates": [-122.33, 47.60] },
+      { "name": "Rainier Health", "coordinates": [-122.23, 47.70] }
+    ]
+  },
+  {
+    "id": "FDA-2026-012",
+    "date": "2026-05-26",
+    "product": "Fentanyl Transdermal System",
+    "manufacturer": "Janssen Pharmaceuticals",
+    "reason": "Adhesive failure leading to potential accidental exposure.",
+    "severity": "critical",
+    "affectedHospitals": [
+      { "name": "Phoenix Medical", "coordinates": [-112.07, 33.44] },
+      { "name": "Desert Care", "coordinates": [-111.97, 33.54] }
+    ]
+  },
+  {
+    "id": "FDA-2026-013",
+    "date": "2026-05-26",
+    "product": "Metformin HCl ER Tablets",
+    "manufacturer": "Amneal Pharmaceuticals",
+    "reason": "Detection of NDMA impurity above acceptable limits.",
+    "severity": "medium",
+    "affectedHospitals": [
+      { "name": "Atlanta Regional", "coordinates": [-84.38, 33.74] },
+      { "name": "Georgia Health Center", "coordinates": [-84.28, 33.84] }
+    ]
+  },
+  {
+    "id": "FDA-2026-014",
+    "date": "2026-05-27",
+    "product": "Dexamethasone Sodium Phosphate",
+    "manufacturer": "Hikma Pharmaceuticals",
+    "reason": "Mislabeled concentration on carton.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "Miami General", "coordinates": [-80.19, 25.76] },
+      { "name": "Biscayne Bay Health", "coordinates": [-80.09, 25.86] }
+    ]
+  },
+  {
+    "id": "FDA-2026-015",
+    "date": "2026-05-27",
+    "product": "Pantoprazole Sodium DR",
+    "manufacturer": "Dr. Reddy's Laboratories",
+    "reason": "Packaging error resulting in mixed tablet types.",
+    "severity": "medium",
+    "affectedHospitals": [
+      { "name": "Detroit Medical", "coordinates": [-83.04, 42.33] },
+      { "name": "Motor City Care", "coordinates": [-82.94, 42.43] }
+    ]
+  },
+  {
+    "id": "FDA-2026-016",
+    "date": "2026-05-27",
+    "product": "Warfarin Sodium Tablets",
+    "manufacturer": "Taro Pharmaceuticals",
+    "reason": "Oversized tablets detected in bulk packaging.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "Philadelphia General", "coordinates": [-75.16, 39.95] },
+      { "name": "Liberty Medical Center", "coordinates": [-75.06, 40.05] }
+    ]
+  },
+  {
+    "id": "FDA-2026-017",
+    "date": "2026-05-28",
+    "product": "Ondansetron Injection",
+    "manufacturer": "Fresenius Kabi",
+    "reason": "Precipitate found in solution prior to expiration.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "Dallas Metro", "coordinates": [-96.79, 32.77] },
+      { "name": "Lone Star Health", "coordinates": [-96.69, 32.87] }
+    ]
+  },
+  {
+    "id": "FDA-2026-018",
+    "date": "2026-05-28",
+    "product": "Azithromycin for Oral Suspension",
+    "manufacturer": "Lupin Pharmaceuticals",
+    "reason": "Incorrect reconstitution instructions on label.",
+    "severity": "medium",
+    "affectedHospitals": [
+      { "name": "San Diego Medical", "coordinates": [-117.16, 32.71] },
+      { "name": "Pacific Coast Care", "coordinates": [-117.06, 32.81] }
+    ]
+  },
+  {
+    "id": "FDA-2026-019",
+    "date": "2026-05-28",
+    "product": "Ketamine HCl Injection",
+    "manufacturer": "Par Pharmaceutical",
+    "reason": "Cracked vials discovered in transit.",
+    "severity": "critical",
+    "affectedHospitals": [
+      { "name": "Baltimore Trauma Center", "coordinates": [-76.61, 39.29] },
+      { "name": "Chesapeake Health", "coordinates": [-76.51, 39.39] }
+    ]
+  },
+  {
+    "id": "FDA-2026-020",
+    "date": "2026-05-29",
+    "product": "Naloxone HCl Injection",
+    "manufacturer": "Hospira Inc.",
+    "reason": "Plunger malfunction in pre-filled syringes.",
+    "severity": "critical",
+    "affectedHospitals": [
+      { "name": "Portland General", "coordinates": [-122.67, 45.52] },
+      { "name": "Rose City Medical", "coordinates": [-122.57, 45.62] }
+    ]
+  },
+  {
+    "id": "FDA-2026-021",
+    "date": "2026-05-29",
+    "product": "Lisinopril Tablets",
+    "manufacturer": "Zydus Pharmaceuticals",
+    "reason": "Foreign substance (metal shards) found during inspection.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "Las Vegas Care", "coordinates": [-115.13, 36.16] },
+      { "name": "Desert Oasis Health", "coordinates": [-115.03, 36.26] }
+    ]
+  },
+  {
+    "id": "FDA-2026-022",
+    "date": "2026-05-29",
+    "product": "Simvastatin Tablets",
+    "manufacturer": "Accord Healthcare",
+    "reason": "Failing impurity specifications at 12 months.",
+    "severity": "low",
+    "affectedHospitals": [
+      { "name": "Charlotte Medical", "coordinates": [-80.84, 35.22] },
+      { "name": "Queen City Health", "coordinates": [-80.74, 35.32] }
+    ]
+  },
+  {
+    "id": "FDA-2026-023",
+    "date": "2026-05-30",
+    "product": "Midazolam Injection",
+    "manufacturer": "Akorn Inc.",
+    "reason": "Microbial contamination detected in reserve samples.",
+    "severity": "critical",
+    "affectedHospitals": [
+      { "name": "Indianapolis Health", "coordinates": [-86.15, 39.76] },
+      { "name": "Circle City Medical", "coordinates": [-86.05, 39.86] }
+    ]
+  },
+  {
+    "id": "FDA-2026-024",
+    "date": "2026-05-30",
+    "product": "Levothyroxine Sodium Tablets",
+    "manufacturer": "AbbVie",
+    "reason": "Subpotency observed leading to potential hypothyroidism.",
+    "severity": "medium",
+    "affectedHospitals": [
+      { "name": "Columbus Regional", "coordinates": [-82.99, 39.96] },
+      { "name": "Capital Care", "coordinates": [-82.89, 40.06] }
+    ]
+  },
+  {
+    "id": "FDA-2026-025",
+    "date": "2026-05-30",
+    "product": "Atorvastatin Calcium",
+    "manufacturer": "Mylan Inc.",
+    "reason": "Out of specification for water content.",
+    "severity": "low",
+    "affectedHospitals": [
+      { "name": "Austin General", "coordinates": [-97.74, 30.26] },
+      { "name": "Hill Country Medical", "coordinates": [-97.64, 30.36] }
+    ]
+  },
+  {
+    "id": "FDA-2026-026",
+    "date": "2026-05-31",
+    "product": "Diazepam Injection",
+    "manufacturer": "West-Ward Pharmaceuticals",
+    "reason": "Crystallization observed in ampules.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "Memphis Med Center", "coordinates": [-90.04, 35.14] },
+      { "name": "River City Care", "coordinates": [-89.94, 35.24] }
+    ]
+  },
+  {
+    "id": "FDA-2026-027",
+    "date": "2026-05-31",
+    "product": "Gabapentin Capsules",
+    "manufacturer": "Glenmark Pharmaceuticals",
+    "reason": "Capsules bursting due to pressure buildup.",
+    "severity": "medium",
+    "affectedHospitals": [
+      { "name": "Louisville Health", "coordinates": [-85.75, 38.25] },
+      { "name": "Derby City Medical", "coordinates": [-85.65, 38.35] }
+    ]
+  },
+  {
+    "id": "FDA-2026-028",
+    "date": "2026-05-31",
+    "product": "Omeprazole Delayed-Release",
+    "manufacturer": "Apotex Corp.",
+    "reason": "Improper seal on bottles leading to moisture exposure.",
+    "severity": "low",
+    "affectedHospitals": [
+      { "name": "Nashville General", "coordinates": [-86.78, 36.16] },
+      { "name": "Music City Health", "coordinates": [-86.68, 36.26] }
+    ]
+  },
+  {
+    "id": "FDA-2026-029",
+    "date": "2026-06-01",
+    "product": "Bupivacaine HCl Injection",
+    "manufacturer": "Hospira Inc.",
+    "reason": "Particulate matter identified as stainless steel fragments.",
+    "severity": "critical",
+    "affectedHospitals": [
+      { "name": "Oklahoma City Med", "coordinates": [-97.51, 35.46] },
+      { "name": "Prairie Health", "coordinates": [-97.41, 35.56] }
+    ]
+  },
+  {
+    "id": "FDA-2026-030",
+    "date": "2026-06-01",
+    "product": "Sertraline HCl Tablets",
+    "manufacturer": "Cipla USA",
+    "reason": "Uncharacteristic odor reported by multiple pharmacies.",
+    "severity": "medium",
+    "affectedHospitals": [
+      { "name": "El Paso General", "coordinates": [-106.48, 31.76] },
+      { "name": "Border Care", "coordinates": [-106.38, 31.86] }
+    ]
+  },
+  {
+    "id": "FDA-2026-031",
+    "date": "2026-06-01",
+    "product": "Metoprolol Tartrate",
+    "manufacturer": "Novartis",
+    "reason": "Dissolution failure resulting in altered pharmacokinetics.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "San Jose Medical Center", "coordinates": [-121.88, 37.33] },
+      { "name": "Silicon Valley Health", "coordinates": [-121.78, 37.43] }
+    ]
+  },
+  {
+    "id": "FDA-2026-032",
+    "date": "2026-06-02",
+    "product": "Fluoxetine Capsules",
+    "manufacturer": "Teva Pharmaceuticals",
+    "reason": "Incorrect lot number printed on primary packaging.",
+    "severity": "low",
+    "affectedHospitals": [
+      { "name": "Kansas City Regional", "coordinates": [-94.57, 39.09] },
+      { "name": "Heartland Medical", "coordinates": [-94.47, 39.19] }
+    ]
+  },
+  {
+    "id": "FDA-2026-033",
+    "date": "2026-06-02",
+    "product": "Amiodarone HCl Injection",
+    "manufacturer": "Fresenius Kabi",
+    "reason": "Leaking IV bags discovered during unpacking.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "Cleveland Medical", "coordinates": [-81.69, 41.49] },
+      { "name": "Lakefront Health", "coordinates": [-81.59, 41.59] }
+    ]
+  },
+  {
+    "id": "FDA-2026-034",
+    "date": "2026-06-02",
+    "product": "Prednisone Tablets",
+    "manufacturer": "Roxane Laboratories",
+    "reason": "Cross-contamination with penicillin derivatives.",
+    "severity": "critical",
+    "affectedHospitals": [
+      { "name": "Omaha General", "coordinates": [-95.93, 41.25] },
+      { "name": "Midwest Care", "coordinates": [-95.83, 41.35] }
+    ]
+  },
+  {
+    "id": "FDA-2026-035",
+    "date": "2026-06-03",
+    "product": "Clopidogrel Tablets",
+    "manufacturer": "Apotex Corp.",
+    "reason": "Superpotent batches detected.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "Raleigh Health Center", "coordinates": [-78.63, 35.77] },
+      { "name": "Oak City Medical", "coordinates": [-78.53, 35.87] }
+    ]
+  },
+  {
+    "id": "FDA-2026-036",
+    "date": "2026-06-03",
+    "product": "Ciprofloxacin IV",
+    "manufacturer": "Bayer",
+    "reason": "Inadequate sterilization of stoppers.",
+    "severity": "critical",
+    "affectedHospitals": [
+      { "name": "Sacramento General", "coordinates": [-121.49, 38.58] },
+      { "name": "Capital Health", "coordinates": [-121.39, 38.68] }
+    ]
+  },
+  {
+    "id": "FDA-2026-037",
+    "date": "2026-06-03",
+    "product": "Duloxetine DR Capsules",
+    "manufacturer": "Lupin Pharmaceuticals",
+    "reason": "Failed dissolution testing at release.",
+    "severity": "medium",
+    "affectedHospitals": [
+      { "name": "Fresno Medical Center", "coordinates": [-119.78, 36.73] },
+      { "name": "Valley Health", "coordinates": [-119.68, 36.83] }
+    ]
+  },
+  {
+    "id": "FDA-2026-038",
+    "date": "2026-06-04",
+    "product": "Hydromorphone HCl Injection",
+    "manufacturer": "Pfizer",
+    "reason": "Label on ampule missing concentration strength.",
+    "severity": "critical",
+    "affectedHospitals": [
+      { "name": "Salt Lake Regional", "coordinates": [-111.89, 40.76] },
+      { "name": "Mountain Medical", "coordinates": [-111.79, 40.86] }
+    ]
+  },
+  {
+    "id": "FDA-2026-039",
+    "date": "2026-06-04",
+    "product": "Bupropion HCl ER Tablets",
+    "manufacturer": "Sun Pharma",
+    "reason": "Tablets breaking in half inside bottles.",
+    "severity": "medium",
+    "affectedHospitals": [
+      { "name": "Tulsa General", "coordinates": [-95.99, 36.15] },
+      { "name": "Oil City Health", "coordinates": [-95.89, 36.25] }
+    ]
+  },
+  {
+    "id": "FDA-2026-040",
+    "date": "2026-06-04",
+    "product": "Escitalopram Oxalate",
+    "manufacturer": "Mylan Inc.",
+    "reason": "Missing patient medication guides in shipments.",
+    "severity": "low",
+    "affectedHospitals": [
+      { "name": "Albuquerque Care", "coordinates": [-106.65, 35.08] },
+      { "name": "Desert Medical", "coordinates": [-106.55, 35.18] }
+    ]
+  },
+  {
+    "id": "FDA-2026-041",
+    "date": "2026-06-05",
+    "product": "Dobutamine Injection",
+    "manufacturer": "Hospira Inc.",
+    "reason": "Discoloration of solution indicating oxidation.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "Tucson Medical Center", "coordinates": [-110.92, 32.22] },
+      { "name": "Sonoran Health", "coordinates": [-110.82, 32.32] }
+    ]
+  },
+  {
+    "id": "FDA-2026-042",
+    "date": "2026-06-05",
+    "product": "Hydrochlorothiazide Tablets",
+    "manufacturer": "Zydus Pharmaceuticals",
+    "reason": "Presence of dark spots on tablets.",
+    "severity": "low",
+    "affectedHospitals": [
+      { "name": "Colorado Springs Health", "coordinates": [-104.82, 38.83] },
+      { "name": "Pikes Peak Medical", "coordinates": [-104.72, 38.93] }
+    ]
+  },
+  {
+    "id": "FDA-2026-043",
+    "date": "2026-06-05",
+    "product": "Haloperidol Decanoate Injection",
+    "manufacturer": "Janssen Pharmaceuticals",
+    "reason": "Syringe needle detachment during administration.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "Bakersfield General", "coordinates": [-119.01, 35.37] },
+      { "name": "Central Valley Care", "coordinates": [-118.91, 35.47] }
+    ]
+  },
+  {
+    "id": "FDA-2026-044",
+    "date": "2026-06-06",
+    "product": "Dopamine HCl Injection",
+    "manufacturer": "Baxter Healthcare",
+    "reason": "Particulate matter identified as silicone.",
+    "severity": "critical",
+    "affectedHospitals": [
+      { "name": "Honolulu Medical Center", "coordinates": [-157.85, 21.30] },
+      { "name": "Pacific Island Health", "coordinates": [-157.75, 21.40] }
+    ]
+  },
+  {
+    "id": "FDA-2026-045",
+    "date": "2026-06-06",
+    "product": "Clonazepam Tablets",
+    "manufacturer": "Accord Healthcare",
+    "reason": "Incorrect expiry date on blister packs.",
+    "severity": "low",
+    "affectedHospitals": [
+      { "name": "Anchorage Regional", "coordinates": [-149.90, 61.21] },
+      { "name": "Northern Lights Care", "coordinates": [-149.80, 61.31] }
+    ]
+  },
+  {
+    "id": "FDA-2026-046",
+    "date": "2026-06-06",
+    "product": "Trazodone HCl Tablets",
+    "manufacturer": "Teva Pharmaceuticals",
+    "reason": "Tablets sticking together inside bottles.",
+    "severity": "medium",
+    "affectedHospitals": [
+      { "name": "New Orleans General", "coordinates": [-90.07, 29.95] },
+      { "name": "Crescent City Med", "coordinates": [-89.97, 30.05] }
+    ]
+  },
+  {
+    "id": "FDA-2026-047",
+    "date": "2026-06-07",
+    "product": "Amlodipine Besylate",
+    "manufacturer": "Aurobindo Pharma",
+    "reason": "Subpotency detected during random sampling.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "Tampa Medical Center", "coordinates": [-82.45, 27.95] },
+      { "name": "Gulf Coast Health", "coordinates": [-82.35, 28.05] }
+    ]
+  },
+  {
+    "id": "FDA-2026-048",
+    "date": "2026-06-07",
+    "product": "Losartan Potassium",
+    "manufacturer": "Torrent Pharmaceuticals",
+    "reason": "Trace levels of N-Methylnitrosobutyric acid (NMBA).",
+    "severity": "medium",
+    "affectedHospitals": [
+      { "name": "Orlando General", "coordinates": [-81.37, 28.53] },
+      { "name": "Central Florida Care", "coordinates": [-81.27, 28.63] }
+    ]
+  },
+  {
+    "id": "FDA-2026-049",
+    "date": "2026-06-07",
+    "product": "Cefazolin for Injection",
+    "manufacturer": "Sandoz",
+    "reason": "Loss of sterility assurance due to faulty vial crimps.",
+    "severity": "critical",
+    "affectedHospitals": [
+      { "name": "Cincinnati Health", "coordinates": [-84.51, 39.10] },
+      { "name": "River Med Center", "coordinates": [-84.41, 39.20] }
+    ]
+  },
+  {
+    "id": "FDA-2026-050",
+    "date": "2026-06-08",
+    "product": "Venlafaxine ER Capsules",
+    "manufacturer": "Pfizer",
+    "reason": "Capsules containing varied pellet quantities.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "Pittsburgh General", "coordinates": [-79.99, 40.44] },
+      { "name": "Steel City Health", "coordinates": [-79.89, 40.54] }
+    ]
+  },
+  {
+    "id": "FDA-2026-051",
+    "date": "2026-06-08",
+    "product": "Glipizide ER Tablets",
+    "manufacturer": "Actavis Pharma",
+    "reason": "Labeling mix-up; labeled as 10mg, contains 5mg.",
+    "severity": "medium",
+    "affectedHospitals": [
+      { "name": "St. Louis Medical", "coordinates": [-90.19, 38.62] },
+      { "name": "Gateway Health", "coordinates": [-90.09, 38.72] }
+    ]
+  },
+  {
+    "id": "FDA-2026-052",
+    "date": "2026-06-08",
+    "product": "Mirtazapine Tablets",
+    "manufacturer": "Aurobindo Pharma",
+    "reason": "Incorrect barcode on outer carton.",
+    "severity": "low",
+    "affectedHospitals": [
+      { "name": "St. Paul Regional", "coordinates": [-93.09, 44.95] },
+      { "name": "Capital City Care", "coordinates": [-92.99, 45.05] }
+    ]
+  },
+  {
+    "id": "FDA-2026-053",
+    "date": "2026-06-09",
+    "product": "Buprenorphine Transdermal",
+    "manufacturer": "Purdue Pharma",
+    "reason": "Patch adhesive failure resulting in poor absorption.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "Toledo Medical Center", "coordinates": [-83.53, 41.65] },
+      { "name": "Glass City Health", "coordinates": [-83.43, 41.75] }
+    ]
+  },
+  {
+    "id": "FDA-2026-054",
+    "date": "2026-06-09",
+    "product": "Methadone HCl Oral Concentrate",
+    "manufacturer": "Mallinckrodt",
+    "reason": "Crystallization in solution at room temperature.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "Newark General", "coordinates": [-74.17, 40.73] },
+      { "name": "Brick City Med", "coordinates": [-74.07, 40.83] }
+    ]
+  },
+  {
+    "id": "FDA-2026-055",
+    "date": "2026-06-09",
+    "product": "Zolpidem Tartrate",
+    "manufacturer": "Sanofi",
+    "reason": "Superpotent tablets leading to prolonged sedation.",
+    "severity": "critical",
+    "affectedHospitals": [
+      { "name": "Jersey City Med", "coordinates": [-74.04, 40.72] },
+      { "name": "Liberty Care", "coordinates": [-73.94, 40.82] }
+    ]
+  },
+  {
+    "id": "FDA-2026-056",
+    "date": "2026-06-10",
+    "product": "Eszopiclone Tablets",
+    "manufacturer": "Sun Pharma",
+    "reason": "Off-color tablets reported.",
+    "severity": "low",
+    "affectedHospitals": [
+      { "name": "Lincoln Health Center", "coordinates": [-96.70, 40.80] },
+      { "name": "Star City Medical", "coordinates": [-96.60, 40.90] }
+    ]
+  },
+  {
+    "id": "FDA-2026-057",
+    "date": "2026-06-10",
+    "product": "Alprazolam Tablets",
+    "manufacturer": "Greenstone LLC",
+    "reason": "Mispackaged with different medication.",
+    "severity": "critical",
+    "affectedHospitals": [
+      { "name": "Buffalo General", "coordinates": [-78.87, 42.88] },
+      { "name": "Queen City Care", "coordinates": [-78.77, 42.98] }
+    ]
+  },
+  {
+    "id": "FDA-2026-058",
+    "date": "2026-06-10",
+    "product": "Temazepam Capsules",
+    "manufacturer": "Mallinckrodt",
+    "reason": "Failed assay test at 9-month stability.",
+    "severity": "medium",
+    "affectedHospitals": [
+      { "name": "Fort Wayne Medical", "coordinates": [-85.13, 41.07] },
+      { "name": "Summit City Health", "coordinates": [-85.03, 41.17] }
+    ]
+  },
+  {
+    "id": "FDA-2026-059",
+    "date": "2026-06-11",
+    "product": "Oxycodone HCl Tablets",
+    "manufacturer": "Endo Pharmaceuticals",
+    "reason": "Missing imprint codes on tablets.",
+    "severity": "medium",
+    "affectedHospitals": [
+      { "name": "Madison General", "coordinates": [-89.40, 43.07] },
+      { "name": "Lake City Care", "coordinates": [-89.30, 43.17] }
+    ]
+  },
+  {
+    "id": "FDA-2026-060",
+    "date": "2026-06-11",
+    "product": "Hydrocodone Bitartrate/APAP",
+    "manufacturer": "Qualitest",
+    "reason": "Oversized tablets exceeding weight specifications.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "Durham Medical Center", "coordinates": [-78.89, 35.99] },
+      { "name": "Bull City Health", "coordinates": [-78.79, 36.09] }
+    ]
+  },
+  {
+    "id": "FDA-2026-061",
+    "date": "2026-06-11",
+    "product": "Tramadol HCl Tablets",
+    "manufacturer": "Amneal Pharmaceuticals",
+    "reason": "Foreign substance embedded in tablet.",
+    "severity": "medium",
+    "affectedHospitals": [
+      { "name": "Laredo Regional", "coordinates": [-99.50, 27.50] },
+      { "name": "Border Health", "coordinates": [-99.40, 27.60] }
+    ]
+  },
+  {
+    "id": "FDA-2026-062",
+    "date": "2026-06-12",
+    "product": "Codeine Sulfate Tablets",
+    "manufacturer": "Roxane Laboratories",
+    "reason": "Labeling mix-up; unit dose packs mislabeled.",
+    "severity": "critical",
+    "affectedHospitals": [
+      { "name": "Lubbock Med Center", "coordinates": [-101.85, 33.57] },
+      { "name": "Hub City Care", "coordinates": [-101.75, 33.67] }
+    ]
+  },
+  {
+    "id": "FDA-2026-063",
+    "date": "2026-06-12",
+    "product": "Oxymorphone HCl ER",
+    "manufacturer": "Endo Pharmaceuticals",
+    "reason": "Failed dissolution specifications, premature drug release.",
+    "severity": "critical",
+    "affectedHospitals": [
+      { "name": "Winston-Salem Health", "coordinates": [-80.24, 36.09] },
+      { "name": "Camel City Medical", "coordinates": [-80.14, 36.19] }
+    ]
+  },
+  {
+    "id": "FDA-2026-064",
+    "date": "2026-06-12",
+    "product": "Tapentadol Tablets",
+    "manufacturer": "Janssen Pharmaceuticals",
+    "reason": "Packaging error; missing desiccants in bottles.",
+    "severity": "low",
+    "affectedHospitals": [
+      { "name": "Garland General", "coordinates": [-96.62, 32.91] },
+      { "name": "Metro Health", "coordinates": [-96.52, 33.01] }
+    ]
+  },
+  {
+    "id": "FDA-2026-065",
+    "date": "2026-06-13",
+    "product": "Lidocaine Patches 5%",
+    "manufacturer": "Endo Pharmaceuticals",
+    "reason": "Patch backing difficult to remove.",
+    "severity": "low",
+    "affectedHospitals": [
+      { "name": "Glendale Medical Center", "coordinates": [-112.18, 33.53] },
+      { "name": "Coyote Care", "coordinates": [-112.08, 33.63] }
+    ]
+  },
+  {
+    "id": "FDA-2026-066",
+    "date": "2026-06-13",
+    "product": "Diclofenac Sodium Gel",
+    "manufacturer": "GSK",
+    "reason": "Separation of gel emulsion in tubes.",
+    "severity": "medium",
+    "affectedHospitals": [
+      { "name": "Hialeah Health", "coordinates": [-80.27, 25.85] },
+      { "name": "South Florida Med", "coordinates": [-80.17, 25.95] }
+    ]
+  },
+  {
+    "id": "FDA-2026-067",
+    "date": "2026-06-13",
+    "product": "Celecoxib Capsules",
+    "manufacturer": "Pfizer",
+    "reason": "Cross-contamination with ibuprofen.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "Reno General", "coordinates": [-119.81, 39.52] },
+      { "name": "Silver State Health", "coordinates": [-119.71, 39.62] }
+    ]
+  },
+  {
+    "id": "FDA-2026-068",
+    "date": "2026-06-14",
+    "product": "Meloxicam Tablets",
+    "manufacturer": "Zydus Pharmaceuticals",
+    "reason": "Tablets failing friability tests.",
+    "severity": "medium",
+    "affectedHospitals": [
+      { "name": "Baton Rouge Medical", "coordinates": [-91.14, 30.45] },
+      { "name": "Capital City Health", "coordinates": [-91.04, 30.55] }
+    ]
+  },
+  {
+    "id": "FDA-2026-069",
+    "date": "2026-06-14",
+    "product": "Naproxen Sodium",
+    "manufacturer": "Bayer",
+    "reason": "Mislabeled expiration dates on cartons.",
+    "severity": "low",
+    "affectedHospitals": [
+      { "name": "Richmond General", "coordinates": [-77.43, 37.54] },
+      { "name": "River City Medical", "coordinates": [-77.33, 37.64] }
+    ]
+  },
+  {
+    "id": "FDA-2026-070",
+    "date": "2026-06-14",
+    "product": "Ketorolac Tromethamine Inj",
+    "manufacturer": "Hospira Inc.",
+    "reason": "Particulates found in clear solution.",
+    "severity": "critical",
+    "affectedHospitals": [
+      { "name": "Boise Medical Center", "coordinates": [-116.20, 43.61] },
+      { "name": "Treasure Valley Health", "coordinates": [-116.10, 43.71] }
+    ]
+  },
+  {
+    "id": "FDA-2026-071",
+    "date": "2026-06-15",
+    "product": "Indomethacin Capsules",
+    "manufacturer": "Mylan Inc.",
+    "reason": "Subpotent capsules detected during routine testing.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "San Bernardino Health", "coordinates": [-117.28, 34.10] },
+      { "name": "Inland Empire Med", "coordinates": [-117.18, 34.20] }
+    ]
+  },
+  {
+    "id": "FDA-2026-072",
+    "date": "2026-06-15",
+    "product": "Piroxicam Capsules",
+    "manufacturer": "Pfizer",
+    "reason": "Packaging defect compromising sterility of blister packs.",
+    "severity": "medium",
+    "affectedHospitals": [
+      { "name": "Spokane General", "coordinates": [-117.42, 47.65] },
+      { "name": "Inland Northwest Care", "coordinates": [-117.32, 47.75] }
+    ]
+  },
+  {
+    "id": "FDA-2026-073",
+    "date": "2026-06-15",
+    "product": "Nabumetone Tablets",
+    "manufacturer": "Teva Pharmaceuticals",
+    "reason": "Incorrect lot number on secondary packaging.",
+    "severity": "low",
+    "affectedHospitals": [
+      { "name": "Des Moines Medical", "coordinates": [-93.60, 41.58] },
+      { "name": "Capital Health Center", "coordinates": [-93.50, 41.68] }
+    ]
+  },
+  {
+    "id": "FDA-2026-074",
+    "date": "2026-06-16",
+    "product": "Sulindac Tablets",
+    "manufacturer": "Mutual Pharmaceutical",
+    "reason": "Tablets exhibiting abnormal discoloration.",
+    "severity": "medium",
+    "affectedHospitals": [
+      { "name": "Modesto General", "coordinates": [-120.99, 37.63] },
+      { "name": "Valley Care Center", "coordinates": [-120.89, 37.73] }
+    ]
+  },
+  {
+    "id": "FDA-2026-075",
+    "date": "2026-06-16",
+    "product": "Etodolac Capsules",
+    "manufacturer": "Taro Pharmaceuticals",
+    "reason": "Failed dissolution testing at 18 months.",
+    "severity": "low",
+    "affectedHospitals": [
+      { "name": "Fayetteville Health", "coordinates": [-78.87, 35.05] },
+      { "name": "Sandhills Medical", "coordinates": [-78.77, 35.15] }
+    ]
+  },
+  {
+    "id": "FDA-2026-076",
+    "date": "2026-06-16",
+    "product": "Oxaprozin Tablets",
+    "manufacturer": "Sun Pharma",
+    "reason": "Cross-contamination with trace amounts of amoxicillin.",
+    "severity": "critical",
+    "affectedHospitals": [
+      { "name": "Tacoma Medical Center", "coordinates": [-122.44, 47.25] },
+      { "name": "South Sound Health", "coordinates": [-122.34, 47.35] }
+    ]
+  },
+  {
+    "id": "FDA-2026-077",
+    "date": "2026-06-17",
+    "product": "Tolmetin Sodium",
+    "manufacturer": "Apotex Corp.",
+    "reason": "Out of specification for related substances.",
+    "severity": "medium",
+    "affectedHospitals": [
+      { "name": "Shreveport General", "coordinates": [-93.75, 32.52] },
+      { "name": "River City Med", "coordinates": [-93.65, 32.62] }
+    ]
+  },
+  {
+    "id": "FDA-2026-078",
+    "date": "2026-06-17",
+    "product": "Mefenamic Acid Capsules",
+    "manufacturer": "Micro Labs",
+    "reason": "Capsules containing varying powder weights.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "Augusta Medical Center", "coordinates": [-81.97, 33.47] },
+      { "name": "River Region Health", "coordinates": [-81.87, 33.57] }
+    ]
+  },
+  {
+    "id": "FDA-2026-079",
+    "date": "2026-06-17",
+    "product": "Flurbiprofen Tablets",
+    "manufacturer": "Bausch Health",
+    "reason": "Incomplete coating on tablets leading to bitter taste.",
+    "severity": "low",
+    "affectedHospitals": [
+      { "name": "Mobile General", "coordinates": [-88.03, 30.69] },
+      { "name": "Port City Care", "coordinates": [-87.93, 30.79] }
+    ]
+  },
+  {
+    "id": "FDA-2026-080",
+    "date": "2026-06-18",
+    "product": "Ketoprofen ER Capsules",
+    "manufacturer": "Actavis Pharma",
+    "reason": "Premature release of active ingredient in ER formulation.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "Little Rock Health", "coordinates": [-92.28, 34.74] },
+      { "name": "Capital Care Med", "coordinates": [-92.18, 34.84] }
+    ]
+  },
+  {
+    "id": "FDA-2026-081",
+    "date": "2026-06-18",
+    "product": "Fenoprofen Calcium",
+    "manufacturer": "Amneal Pharmaceuticals",
+    "reason": "Trace levels of solvent residue detected.",
+    "severity": "medium",
+    "affectedHospitals": [
+      { "name": "Huntsville Medical", "coordinates": [-86.58, 34.73] },
+      { "name": "Rocket City Health", "coordinates": [-86.48, 34.83] }
+    ]
+  },
+  {
+    "id": "FDA-2026-082",
+    "date": "2026-06-18",
+    "product": "Aspirin 81mg EC Tablets",
+    "manufacturer": "Bayer",
+    "reason": "Enteric coating failure resulting in stomach upset.",
+    "severity": "medium",
+    "affectedHospitals": [
+      { "name": "Knoxville General", "coordinates": [-83.92, 35.96] },
+      { "name": "Marble City Care", "coordinates": [-83.82, 36.06] }
+    ]
+  },
+  {
+    "id": "FDA-2026-083",
+    "date": "2026-06-19",
+    "product": "Buprenorphine/Naloxone Film",
+    "manufacturer": "Indivior",
+    "reason": "Film strips sticking to packaging inner lining.",
+    "severity": "low",
+    "affectedHospitals": [
+      { "name": "Grand Rapids Med", "coordinates": [-85.66, 42.96] },
+      { "name": "River City Health", "coordinates": [-85.56, 43.06] }
+    ]
+  },
+  {
+    "id": "FDA-2026-084",
+    "date": "2026-06-19",
+    "product": "Pentazocine/Naloxone",
+    "manufacturer": "Watson Laboratories",
+    "reason": "Mismatched quantities of active ingredients in blend.",
+    "severity": "critical",
+    "affectedHospitals": [
+      { "name": "Brownsville General", "coordinates": [-97.50, 25.90] },
+      { "name": "Border Medical", "coordinates": [-97.40, 26.00] }
+    ]
+  },
+  {
+    "id": "FDA-2026-085",
+    "date": "2026-06-19",
+    "product": "Butorphanol Tartrate Nasal",
+    "manufacturer": "Apotex Corp.",
+    "reason": "Defective spray pump delivering variable doses.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "Providence Medical Center", "coordinates": [-71.41, 41.82] },
+      { "name": "Ocean State Health", "coordinates": [-71.31, 41.92] }
+    ]
+  },
+  {
+    "id": "FDA-2026-086",
+    "date": "2026-06-20",
+    "product": "Nalbuphine HCl Injection",
+    "manufacturer": "Hospira Inc.",
+    "reason": "Cracked ampules found inside cartons.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "Worcester General", "coordinates": [-71.80, 42.26] },
+      { "name": "Heart of Commonwealth Care", "coordinates": [-71.70, 42.36] }
+    ]
+  },
+  {
+    "id": "FDA-2026-087",
+    "date": "2026-06-20",
+    "product": "Fentanyl Transmucosal Lozenges",
+    "manufacturer": "Cephalon",
+    "reason": "Lozenges detached from handles in packaging.",
+    "severity": "medium",
+    "affectedHospitals": [
+      { "name": "Jackson Medical", "coordinates": [-90.18, 32.29] },
+      { "name": "City of Soul Health", "coordinates": [-90.08, 32.39] }
+    ]
+  },
+  {
+    "id": "FDA-2026-088",
+    "date": "2026-06-20",
+    "product": "Sufentanil Citrate Injection",
+    "manufacturer": "Akorn Inc.",
+    "reason": "Subpotent solution identified in recent batches.",
+    "severity": "critical",
+    "affectedHospitals": [
+      { "name": "Chattanooga Health", "coordinates": [-85.30, 35.04] },
+      { "name": "Scenic City Med", "coordinates": [-85.20, 35.14] }
+    ]
+  },
+  {
+    "id": "FDA-2026-089",
+    "date": "2026-06-21",
+    "product": "Remifentanil HCl for Injection",
+    "manufacturer": "Mylan Inc.",
+    "reason": "Particulate matter observed upon reconstitution.",
+    "severity": "critical",
+    "affectedHospitals": [
+      { "name": "Oceanside General", "coordinates": [-117.38, 33.19] },
+      { "name": "Coastal Care Center", "coordinates": [-117.28, 33.29] }
+    ]
+  },
+  {
+    "id": "FDA-2026-090",
+    "date": "2026-06-21",
+    "product": "Alfentanil HCl Injection",
+    "manufacturer": "Akorn Inc.",
+    "reason": "pH out of specification leading to potential irritation.",
+    "severity": "medium",
+    "affectedHospitals": [
+      { "name": "Fort Lauderdale Med", "coordinates": [-80.14, 26.12] },
+      { "name": "Venice of America Health", "coordinates": [-80.04, 26.22] }
+    ]
+  },
+  {
+    "id": "FDA-2026-091",
+    "date": "2026-06-21",
+    "product": "Vancomycin HCl for Injection",
+    "manufacturer": "Fresenius Kabi",
+    "reason": "Presence of dark particles in the lyophilized powder.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "Springfield Regional", "coordinates": [-89.65, 39.78] },
+      { "name": "Capital City Medical", "coordinates": [-89.55, 39.88] }
+    ]
+  },
+  {
+    "id": "FDA-2026-092",
+    "date": "2026-06-22",
+    "product": "Cefepime for Injection",
+    "manufacturer": "Hospira Inc.",
+    "reason": "Loss of sterility assurance due to compromised packaging.",
+    "severity": "critical",
+    "affectedHospitals": [
+      { "name": "Syracuse General", "coordinates": [-76.14, 43.04] },
+      { "name": "Salt City Health", "coordinates": [-76.04, 43.14] }
+    ]
+  },
+  {
+    "id": "FDA-2026-093",
+    "date": "2026-06-22",
+    "product": "Meropenem for Injection",
+    "manufacturer": "Aurobindo Pharma",
+    "reason": "Delayed reconstitution time observed during use.",
+    "severity": "low",
+    "affectedHospitals": [
+      { "name": "Bridgeport Medical", "coordinates": [-73.19, 41.17] },
+      { "name": "Park City Care", "coordinates": [-73.09, 41.27] }
+    ]
+  },
+  {
+    "id": "FDA-2026-094",
+    "date": "2026-06-22",
+    "product": "Piperacillin/Tazobactam",
+    "manufacturer": "Sandoz",
+    "reason": "Crystallization in vials before reconstitution.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "Dayton Health Center", "coordinates": [-84.19, 39.75] },
+      { "name": "Gem City Medical", "coordinates": [-84.09, 39.85] }
+    ]
+  },
+  {
+    "id": "FDA-2026-095",
+    "date": "2026-06-23",
+    "product": "Linezolid Injection",
+    "manufacturer": "Pfizer",
+    "reason": "Discoloration of IV bags.",
+    "severity": "medium",
+    "affectedHospitals": [
+      { "name": "Savannah General", "coordinates": [-81.09, 32.08] },
+      { "name": "Hostess City Health", "coordinates": [-80.99, 32.18] }
+    ]
+  },
+  {
+    "id": "FDA-2026-096",
+    "date": "2026-06-23",
+    "product": "Daptomycin for Injection",
+    "manufacturer": "Teva Pharmaceuticals",
+    "reason": "Particulate matter identified as glass fragments.",
+    "severity": "critical",
+    "affectedHospitals": [
+      { "name": "Clarksville Med", "coordinates": [-87.35, 36.52] },
+      { "name": "Queen City Health Center", "coordinates": [-87.25, 36.62] }
+    ]
+  },
+  {
+    "id": "FDA-2026-097",
+    "date": "2026-06-23",
+    "product": "Tigecycline for Injection",
+    "manufacturer": "Actavis Pharma",
+    "reason": "Subpotency observed in stability samples.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "McAllen General", "coordinates": [-98.23, 26.20] },
+      { "name": "City of Palms Care", "coordinates": [-98.13, 26.30] }
+    ]
+  },
+  {
+    "id": "FDA-2026-098",
+    "date": "2026-06-24",
+    "product": "Ertapenem for Injection",
+    "manufacturer": "Merck",
+    "reason": "Incomplete seals on vials resulting in potential contamination.",
+    "severity": "critical",
+    "affectedHospitals": [
+      { "name": "Killeen Medical Center", "coordinates": [-97.72, 31.11] },
+      { "name": "Bell County Health", "coordinates": [-97.62, 31.21] }
+    ]
+  },
+  {
+    "id": "FDA-2026-099",
+    "date": "2026-06-24",
+    "product": "Aztreonam for Injection",
+    "manufacturer": "Fresenius Kabi",
+    "reason": "Incorrect diluent packaged with drug.",
+    "severity": "high",
+    "affectedHospitals": [
+      { "name": "Waco General", "coordinates": [-97.14, 31.54] },
+      { "name": "Heart of Texas Med", "coordinates": [-97.04, 31.64] }
+    ]
+  },
+  {
+    "id": "FDA-2026-100",
+    "date": "2026-06-24",
+    "product": "Clindamycin Injection",
+    "manufacturer": "Hikma Pharmaceuticals",
+    "reason": "Labeling mix-up; missing allergy warnings.",
+    "severity": "medium",
+    "affectedHospitals": [
+      { "name": "Carrollton Health", "coordinates": [-96.89, 32.95] },
+      { "name": "Metroplex Care", "coordinates": [-96.79, 33.05] }
+    ]
   }
 ]
