@@ -1,0 +1,35 @@
+[
+  {
+    "hospitalId": "HOSP-001",
+    "name": "Northeast General Hospital",
+    "region": "Northeast",
+    "inventory": {
+      "Albuterol Sulfate": { "currentStock": 1200, "dailyBurnRate": 150, "daysOfSupply": 8 },
+      "Lidocaine HCl": { "currentStock": 300, "dailyBurnRate": 100, "daysOfSupply": 3 },
+      "Saline Flush Syringes": { "currentStock": 5000, "dailyBurnRate": 400, "daysOfSupply": 12.5 }
+    },
+    "bedCapacity": "85%"
+  },
+  {
+    "hospitalId": "HOSP-002",
+    "name": "Westside Regional Medical Center",
+    "region": "West",
+    "inventory": {
+      "Albuterol Sulfate": { "currentStock": 4500, "dailyBurnRate": 200, "daysOfSupply": 22.5 },
+      "Lidocaine HCl": { "currentStock": 1500, "dailyBurnRate": 80, "daysOfSupply": 18.75 },
+      "Saline Flush Syringes": { "currentStock": 8000, "dailyBurnRate": 300, "daysOfSupply": 26.6 }
+    },
+    "bedCapacity": "60%"
+  },
+  {
+    "hospitalId": "HOSP-003",
+    "name": "Southern Cross Clinic",
+    "region": "South",
+    "inventory": {
+      "Albuterol Sulfate": { "currentStock": 800, "dailyBurnRate": 50, "daysOfSupply": 16 },
+      "Lidocaine HCl": { "currentStock": 900, "dailyBurnRate": 45, "daysOfSupply": 20 },
+      "Saline Flush Syringes": { "currentStock": 1200, "dailyBurnRate": 300, "daysOfSupply": 4 }
+    },
+    "bedCapacity": "72%"
+  }
+]

@@ -10,6 +10,7 @@ import {
 } from "react-simple-maps";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import useSupercluster from "use-supercluster";
 
 // A common free TopoJSON file for world maps
 const geoUrl = "https://unpkg.com/world-atlas@2.0.2/countries-110m.json";
@@ -60,6 +61,39 @@ export function GlobalThreatRadar({ alerts }: GlobalThreatRadarProps) {
       };
     });
   }, [alerts]);
+
+  // Extract all hospitals as individual points for clustering
+  const hospitalPoints = useMemo(() => {
+    const points: any[] = [];
+    markers.forEach(alert => {
+      alert.affectedHospitals?.forEach(hosp => {
+        points.push({
+          type: "Feature",
+          properties: {
+            cluster: false,
+            hospitalId: `${alert.id}-${hosp.name}`,
+            name: hosp.name,
+            fdaId: alert.id,
+            product: alert.product,
+            severity: alert.severity,
+          },
+          geometry: {
+            type: "Point",
+            coordinates: hosp.coordinates
+          }
+        });
+      });
+    });
+    return points;
+  }, [markers]);
+
+  // Implement supercluster
+  const { clusters, supercluster } = useSupercluster({
+    points: hospitalPoints,
+    bounds: [-180, -90, 180, 90], // Global bounds
+    zoom: Math.round(position.zoom * 2),
+    options: { radius: 40, maxZoom: 20 }
+  });
 
   const handleResetView = () => {
     setPosition({ coordinates: [0, 20], zoom: 1 });
@@ -117,26 +151,107 @@ export function GlobalThreatRadar({ alerts }: GlobalThreatRadarProps) {
             }
           </Geographies>
 
-          {/* Render Hospital Markers if zoomed in */}
-          {position.zoom >= 3 && markers.map((marker) => 
-            marker.affectedHospitals?.map((hospital, index) => (
-              <Marker key={`${marker.id}-hosp-${index}`} coordinates={hospital.coordinates}>
-                <circle r={2 / position.zoom} fill="hsl(var(--primary))" />
-                <text
-                  textAnchor="middle"
-                  y={-4 / position.zoom}
-                  style={{ 
-                    fontFamily: "var(--font-sans)", 
-                    fontSize: `${5 / position.zoom}px`,
-                    fill: "var(--text-muted)",
-                    pointerEvents: "none"
-                  }}
+          {/* Render Hospital Clusters and Individual Markers */}
+          {clusters.map((cluster) => {
+            const [longitude, latitude] = cluster.geometry.coordinates;
+            const {
+              cluster: isCluster,
+              point_count: pointCount,
+            } = cluster.properties;
+
+            const foSize = 400; // Safe bounding box for HTML overlays
+
+            if (isCluster) {
+              const size = 32; // base size on screen
+              return (
+                <Marker key={`cluster-${cluster.id}`} coordinates={[longitude, latitude]}>
+                  <foreignObject 
+                    x={-foSize / 2 / position.zoom} 
+                    y={-foSize / 2 / position.zoom} 
+                    width={foSize / position.zoom} 
+                    height={foSize / position.zoom}
+                    style={{ overflow: 'visible' }}
+                  >
+                    <div className="w-full h-full flex items-center justify-center">
+                      <div
+                        className="flex items-center justify-center rounded-full font-bold shadow-lg cursor-pointer transition-transform hover:scale-110"
+                        style={{
+                          backgroundColor: "var(--bg-surface)",
+                          color: "var(--accent-emerald)",
+                          border: "2px solid var(--accent-emerald)",
+                          width: `${size / position.zoom}px`,
+                          height: `${size / position.zoom}px`,
+                          fontSize: `${14 / position.zoom}px`,
+                        }}
+                        onClick={() => {
+                          const expansionZoom = supercluster ? supercluster.getClusterExpansionZoom(cluster.id as number) : 1;
+                          setPosition({
+                            coordinates: [longitude, latitude],
+                            zoom: Math.max(position.zoom * 1.5, expansionZoom / 2),
+                          });
+                        }}
+                      >
+                        {pointCount}
+                      </div>
+                    </div>
+                  </foreignObject>
+                </Marker>
+              );
+            }
+
+            // Individual hospital marker
+            const dotSize = 8;
+            return (
+              <Marker key={`hospital-${cluster.properties.hospitalId}`} coordinates={[longitude, latitude]}>
+                <foreignObject 
+                  x={-foSize / 2 / position.zoom} 
+                  y={-foSize / 2 / position.zoom} 
+                  width={foSize / position.zoom} 
+                  height={foSize / position.zoom}
+                  style={{ overflow: 'visible' }}
                 >
-                  {hospital.name}
-                </text>
+                  <div className="relative w-full h-full flex items-center justify-center group cursor-pointer">
+                    {/* The Marker Dot */}
+                    <div 
+                      className="rounded-full shadow-md transition-transform group-hover:scale-125" 
+                      style={{ 
+                        backgroundColor: "var(--accent-emerald)",
+                        width: `${dotSize / position.zoom}px`, 
+                        height: `${dotSize / position.zoom}px` 
+                      }} 
+                    />
+                    
+                    {/* The Tooltip/Popup */}
+                    <div 
+                      className="absolute bottom-1/2 mb-1 hidden group-hover:block"
+                      style={{ 
+                        transform: `scale(${1 / position.zoom})`,
+                        transformOrigin: 'bottom center',
+                        pointerEvents: 'none'
+                      }}
+                    >
+                      <div className="w-56 p-3 bg-slate-900 border border-slate-700 rounded-lg shadow-2xl flex flex-col gap-1">
+                        <span className="text-[10px] text-slate-400 font-mono tracking-wider">{cluster.properties.fdaId}</span>
+                        <span className="font-bold text-sm text-slate-100 leading-tight">{cluster.properties.name}</span>
+                        <span className="text-xs text-slate-300 leading-tight line-clamp-2">{cluster.properties.product}</span>
+                        <div className="flex items-center mt-1">
+                           <span className="text-[10px] text-slate-500 mr-1 uppercase font-semibold">Severity:</span>
+                           <span className={`text-[10px] uppercase font-bold px-1.5 py-0.5 rounded-sm ${
+                            cluster.properties.severity === 'critical' ? 'bg-red-500/20 text-red-400' :
+                            cluster.properties.severity === 'high' ? 'bg-orange-500/20 text-orange-400' :
+                            cluster.properties.severity === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
+                            'bg-green-500/20 text-green-400'
+                           }`}>
+                             {cluster.properties.severity}
+                           </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </foreignObject>
               </Marker>
-            ))
-          )}
+            );
+          })}
 
           {/* Render Main Threat Markers */}
           {markers.map((marker) => (
@@ -151,13 +266,13 @@ export function GlobalThreatRadar({ alerts }: GlobalThreatRadarProps) {
               }}
             >
               {/* The base dot */}
-              <circle r={4 / Math.max(1, position.zoom / 2)} fill="var(--state-error)" />
+              <circle r={4 / Math.max(1, position.zoom / 2)} fill="var(--accent-emerald)" />
               
               {/* The pulsing ring using Framer Motion */}
               <motion.circle
                 r={12 / Math.max(1, position.zoom / 2)}
                 fill="transparent"
-                stroke="var(--state-error)"
+                stroke="var(--accent-teal)"
                 strokeWidth={2 / position.zoom}
                 initial={{ scale: 0.5, opacity: 0.8 }}
                 animate={{ scale: 2, opacity: 0 }}
@@ -174,3 +289,5 @@ export function GlobalThreatRadar({ alerts }: GlobalThreatRadarProps) {
     </div>
   );
 }
+
+

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "DS-1001",
+    "drugName": "Albuterol Sulfate",
+    "severity": "High",
+    "affectedRegions": ["Northeast", "Midwest"],
+    "shortageReason": "Manufacturing Delay",
+    "estimatedResolution": "2026-07-15"
+  },
+  {
+    "id": "DS-1002",
+    "drugName": "Lidocaine HCl",
+    "severity": "Critical",
+    "affectedRegions": ["National"],
+    "shortageReason": "Raw Material Scarcity",
+    "estimatedResolution": "2026-08-01"
+  },
+  {
+    "id": "DS-1003",
+    "drugName": "Saline Flush Syringes",
+    "severity": "Medium",
+    "affectedRegions": ["South"],
+    "shortageReason": "Logistics Bottleneck",
+    "estimatedResolution": "2026-06-10"
+  }
+]

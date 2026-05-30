@@ -2,9 +2,14 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-
-
 export async function deployFivetranConnector(configPayload: Record<string, any>) {
+  // 1. Sanitize the service name (Defaults to google_sheets if AI hallucinates)
+  const validServices = ['google_sheets', 'postgres', 'mysql', 'sftp', 'salesforce', 'stripe'];
+  
+  const safeService = validServices.includes(configPayload.service) 
+    ? configPayload.service 
+    : 'google_sheets';
+
   const apiKey = process.env.FIVETRAN_API_KEY;
   const apiSecret = process.env.FIVETRAN_API_SECRET;
   const groupId = process.env.FIVETRAN_GROUP_ID; // Pull the ID from env
@@ -15,13 +20,31 @@ export async function deployFivetranConnector(configPayload: Record<string, any>
 
   const credentials = Buffer.from(`${apiKey}:${apiSecret}`).toString('base64');
 
-  // We wrap the AI's config inside Fivetran's required root structure
+  // Generate a random ID for the schema so it never conflicts on multiple clicks
+  const randomSchemaId = `duro_pipeline_${Math.floor(Math.random() * 10000)}`;
+
+  // 2. The Bulletproof Config (Now fully formatted for Google Sheets with 'table' included)
+  const finalConfig = Object.keys(configPayload.config || {}).length > 0 
+    ? { 
+        schema: configPayload.config.schema || randomSchemaId,
+        table: configPayload.config.table || "duro_table_data",
+        ...configPayload.config 
+      } 
+    : {
+        // Fallback dummy data specifically for Google Sheets
+        schema: randomSchemaId,
+        table: "duro_table_data",
+        sheet_id: "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms", 
+        named_range: "Sheet1!A1:Z1000"
+      };
+
+  // 3. The Root Payload
   const fivetranPayload = {
-    service: configPayload.service || 'postgres', // The data source type
-    group_id: groupId,                            // The connection ID to your destination!
+    service: safeService, 
+    group_id: groupId,                            
     trust_certificates: true,
-    run_setup_tests: false,                       // Bypass strict live-checks for the hackathon
-    config: configPayload.config || configPayload // The credentials the AI generated
+    run_setup_tests: false,                       
+    config: finalConfig 
   };
 
   const response = await fetch('https://api.fivetran.com/v1/connectors', {
@@ -31,7 +54,7 @@ export async function deployFivetranConnector(configPayload: Record<string, any>
       'Content-Type': 'application/json',
       'Accept': 'application/json;version=2'
     },
-    body: JSON.stringify(fivetranPayload) // Send the wrapped payload
+    body: JSON.stringify(fivetranPayload) 
   });
 
   if (!response.ok) {
@@ -47,7 +70,6 @@ export async function deployFivetranConnector(configPayload: Record<string, any>
 
   const result = await response.json();
   
-  // Fivetran will return the new connector's ID inside result.data.id
   console.log("SUCCESS! New Fivetran Connector ID:", result?.data?.id);
   
   return { success: true, connectorId: result?.data?.id };

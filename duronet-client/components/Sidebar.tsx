@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { Globe, Grid, Bell, Database, Server, Terminal, Settings, Zap } from "lucide-react";
+import { Globe, Grid, Bell, Database, Server, Terminal, Settings, Zap, Package } from "lucide-react";
 
 export const ENTERPRISE_MODULES = [
   {
@@ -46,6 +46,9 @@ export function Sidebar({ activeTab, setActiveTab, onModuleClick }: SidebarProps
             Core
           </div>
           <div className="space-y-1">
+            <button onClick={() => setActiveTab('inventory-dashboard')} className={getLinkStyle('inventory-dashboard')}>
+              <Package className="h-4 w-4 opacity-70" /> Inventory Dashboard
+            </button>
             <button onClick={() => setActiveTab('global-radar')} className={getLinkStyle('global-radar')}>
               <Globe className="h-4 w-4 opacity-70" /> Global Radar
             </button>

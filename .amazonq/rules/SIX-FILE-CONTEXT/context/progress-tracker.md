@@ -4,11 +4,13 @@ Update this file after every meaningful implementation change.
 
 ## Current Phase
 
-- **In Progress:** Phase 4 - Advanced Visualization
+- **In Progress:** Phase 2 - The AI Engine (Reasoning & Governance)
+- **Current Unit:** Unit 04 - Gemini Reasoning Service ✅ (COMPLETE)
+- **Next Unit:** Unit 05 - Fivetran Configuration Drafter
 
 ## Current Goal
 
-- Execute Unit 08 (Global Threat Radar) to add geospatial mapping of FDA alerts to the Main Canvas.
+- Execute Unit 05 to expand the Gemini response to draft Fivetran infrastructure-as-code payloads.
 
 ## Completed
 
@@ -23,29 +25,20 @@ Update this file after every meaningful implementation change.
   - Dark Mode Emerald/Teal CSS variables fully configured
   - Static 3-panel dashboard: Sidebar, Main Canvas, Action Panel
   - Enterprise Modules scaling strategy with functional Dialog/Modal
-- **Unit 03:** Risk Matrix Dashboard (End-to-End) ✅
-  - Fetching utilities created in `lib/api.ts`
-  - Backend endpoints serve mock data
+- **Unit 03:** The Predictive Dashboard (End-to-End) ✅
+  - `InventoryMatrix` component displays hospital telemetry (Drug, Current Stock, Burn Rate, Days of Supply)
+  - `ShortageFeed` component displays active drug shortages with severity badges
+  - Fetching utilities created in `lib/api.ts` with `fetchInventoryStatus()` function
+  - Backend endpoints serve mock data: `/api/inventory/status`
+  - Skeleton loaders and error states fully implemented
+  - Integrated into Main Canvas with "Inventory Dashboard" tab
 - **Unit 04:** Gemini Reasoning Service (Node.js) ✅
-  - `POST /api/ai/analyze` endpoint integrated
-  - Gemini integration with structured JSON schema validation
-  - Zero-PHI boundary maintained in prompts
-- **Unit 05:** Fivetran Configuration Drafter (Node.js) ✅
-  - Fivetran JSON schema generation in AI response
-  - Zod validation applied to all payloads
-- **Unit 06:** The AI Action Panel (Next.js) ✅
-  - AlertFeed component with severity badges and loading skeleton
-  - AIAnalysisDisplay component with code block and copy-to-clipboard
-  - Integrated frontend-backend flow: Alert → API Call → AI Analysis → Display
-  - Full UI state management and error handling
-  - Environment variable configuration (NEXT_PUBLIC_API_URL)
-- **Unit 07:** Live Fivetran API Deployment (End-to-End) ✅
-  - Added `POST /api/deploy` endpoint to backend that calls Fivetran API using credentials.
-  - Added 'Approve & Deploy' button to `AIAnalysisDisplay` container on the frontend.
-  - Added `sonner` for deployment success/failure toast notifications.
-  - Placed placeholder keys in `.env` (requires real keys to function successfully).
-
-- **Unit 08:** Global Threat Radar (Geospatial Map) ✅
+  - `POST /api/ai/analyze-shortage` endpoint integrated
+  - `analyzeShortageRisk(shortage, requestedAmount, telemetry)` function implemented
+  - Gemini 1.5 Pro integration with structured JSON schema validation
+  - Zero-PHI boundary enforced in system prompt
+  - Zod validation applied to all responses
+  - Returns: surplusData, mitigationStrategy, stakeholdersRequired
 
 ## In Progress
 

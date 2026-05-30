@@ -11,15 +11,19 @@ import {
   DialogDescription,
   DialogClose,
 } from "@/components/ui/dialog";
-import { Lock, AlertCircle, Loader, Globe, Grid, Bell, Database, Server, Terminal, Settings } from "lucide-react";
+import { Lock, AlertCircle, Loader, Globe, Grid, Bell, Database, Server, Terminal, Settings, Package } from "lucide-react";
 import { Sidebar, ENTERPRISE_MODULES } from "@/components/Sidebar";
-import { AlertFeed } from "@/components/AlertFeed";
-import { AIAnalysisDisplay } from "@/components/AIAnalysisDisplay";
-import { GlobalThreatRadar } from "@/components/GlobalThreatRadar";
-import { RiskMatrix } from "@/components/RiskMatrix";
-import { FivetranConnectors } from "@/components/FivetranConnectors";
-import { ProjectSettings } from "@/components/ProjectSettings";
-import { fetchFdaAlerts, analyzeAlert, deployFivetranConfig } from "@/lib/api";
+import { 
+  AlertFeed, 
+  AIAnalysisDisplay, 
+  GlobalThreatRadar, 
+  RiskMatrix, 
+  FivetranConnectors, 
+  ProjectSettings 
+} from "@/components/Placeholders";
+import { InventoryMatrix } from "@/components/InventoryMatrix";
+import { ShortageFeed } from "@/components/ShortageFeed";
+import { fetchFdaAlerts, analyzeAlert, deployFivetranConfig, fetchInventoryStatus } from "@/lib/api";
 import { toast } from "sonner";
 
 interface Alert {
@@ -37,16 +41,43 @@ interface AIAnalysis {
   fivetranConfigDraft: Record<string, any>;
 }
 
+interface HospitalTelemetry {
+  hospitalId: string;
+  name: string;
+  region: string;
+  inventory: Record<string, any>;
+  bedCapacity: string;
+}
+
+interface DrugShortage {
+  id: string;
+  drugName: string;
+  severity: string;
+  affectedRegions: string[];
+  shortageReason: string;
+  estimatedResolution: string;
+}
+
 export default function Dashboard() {
-  const [activeTab, setActiveTab] = useState('global-radar');
+  const [activeTab, setActiveTab] = useState('inventory-dashboard');
   const [isRoadmapOpen, setIsRoadmapOpen] = useState(false);
   const [selectedModule, setSelectedModule] = useState<(typeof ENTERPRISE_MODULES)[0] | null>(
     null
   );
+  
+  // Alerts state
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [alertsLoading, setAlertsLoading] = useState(true);
   const [alertsError, setAlertsError] = useState<string | null>(null);
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
+  
+  // Inventory state
+  const [inventoryTelemetry, setInventoryTelemetry] = useState<HospitalTelemetry[]>([]);
+  const [drugShortages, setDrugShortages] = useState<DrugShortage[]>([]);
+  const [inventoryLoading, setInventoryLoading] = useState(true);
+  const [inventoryError, setInventoryError] = useState<string | null>(null);
+  
+  // AI Analysis state
   const [aiAnalysis, setAiAnalysis] = useState<AIAnalysis | null>(null);
   const [analysisLoading, setAnalysisLoading] = useState(false);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
@@ -54,13 +85,14 @@ export default function Dashboard() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [deploymentId, setDeploymentId] = useState<string | null>(null);
 
-  // Fetch alerts on component mount
+  // Fetch alerts and inventory on component mount
   useEffect(() => {
-    const loadAlerts = async () => {
+    const loadData = async () => {
       try {
+        // Load alerts
         setAlertsLoading(true);
-        const data = await fetchFdaAlerts();
-        setAlerts(data);
+        const alertsData = await fetchFdaAlerts();
+        setAlerts(alertsData);
         setAlertsError(null);
       } catch (error) {
         setAlertsError("Failed to load alerts. Make sure the backend is running on port 8080.");
@@ -68,9 +100,23 @@ export default function Dashboard() {
       } finally {
         setAlertsLoading(false);
       }
+
+      try {
+        // Load inventory
+        setInventoryLoading(true);
+        const inventoryData = await fetchInventoryStatus();
+        setInventoryTelemetry(inventoryData.telemetry || []);
+        setDrugShortages(inventoryData.shortages || []);
+        setInventoryError(null);
+      } catch (error) {
+        setInventoryError("Failed to load inventory data. Make sure the backend is running on port 8080.");
+        console.error("Error loading inventory:", error);
+      } finally {
+        setInventoryLoading(false);
+      }
     };
 
-    loadAlerts();
+    loadData();
   }, []);
 
   // Handle alert selection and AI analysis
@@ -136,6 +182,12 @@ export default function Dashboard() {
         <nav className="absolute top-16 left-0 w-full bg-slate-900 border-b border-border z-50 flex flex-col p-4 shadow-xl">
           <div className="space-y-2 mb-4">
             <div className="text-xs uppercase tracking-widest text-muted-foreground font-semibold px-2 mb-2">Core</div>
+            <button 
+              className="w-full flex items-center gap-3 px-3 py-3 text-foreground hover:bg-secondary/50 rounded-md transition-colors text-sm font-medium"
+              onClick={() => { setActiveTab('inventory-dashboard'); setIsMobileMenuOpen(false); }}
+            >
+              <Package className="h-4 w-4 opacity-70" /> Inventory Dashboard
+            </button>
             <button 
               className="w-full flex items-center gap-3 px-3 py-3 text-foreground hover:bg-secondary/50 rounded-md transition-colors text-sm font-medium"
               onClick={() => { setActiveTab('global-radar'); setIsMobileMenuOpen(false); }}
@@ -221,6 +273,45 @@ export default function Dashboard() {
 
       {/* Center Main Canvas */}
       <main className="flex-1 flex flex-col overflow-hidden bg-background/50 relative">
+        {activeTab === 'inventory-dashboard' && (
+          <div className="flex-1 flex flex-col w-full h-full">
+            <header className="h-16 border-b border-border bg-card/50 flex items-center px-8 shadow-sm shrink-0">
+              <h2 className="text-xl font-semibold tracking-tight">Predictive Inventory Dashboard</h2>
+            </header>
+            <div className="flex-1 p-8 overflow-auto flex flex-col gap-6">
+              {/* Top section: Drug Shortages */}
+              <div className="flex-shrink-0">
+                <div className="mb-4">
+                  <h3 className="text-sm font-semibold text-foreground uppercase tracking-widest opacity-70 mb-4">
+                    Active Drug Shortages
+                  </h3>
+                </div>
+                <ShortageFeed
+                  shortages={drugShortages}
+                  isLoading={inventoryLoading}
+                  error={inventoryError}
+                />
+              </div>
+
+              {/* Bottom section: Hospital Inventory */}
+              <div className="flex-1 min-h-0">
+                <div className="mb-4">
+                  <h3 className="text-sm font-semibold text-foreground uppercase tracking-widest opacity-70 mb-4">
+                    Hospital Inventory Status
+                  </h3>
+                </div>
+                <div className="overflow-auto flex-1">
+                  <InventoryMatrix
+                    telemetry={inventoryTelemetry}
+                    isLoading={inventoryLoading}
+                    error={inventoryError}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {activeTab === 'global-radar' && (
           <div className="flex-1 flex flex-col w-full h-full">
             <header className="h-16 border-b border-border bg-card/50 flex items-center px-8 shadow-sm shrink-0">
@@ -250,7 +341,7 @@ export default function Dashboard() {
         {activeTab === 'settings' && <ProjectSettings />}
 
         {/* Fallback for undeveloped tabs */}
-        {!['global-radar', 'risk-matrix', 'fivetran', 'settings'].includes(activeTab) && (
+        {!['inventory-dashboard', 'global-radar', 'risk-matrix', 'fivetran', 'settings'].includes(activeTab) && (
           <div className="flex-1 flex flex-col w-full h-full">
             <header className="h-16 border-b border-border bg-card/50 flex items-center px-8 shadow-sm shrink-0">
               <h2 className="text-xl font-semibold tracking-tight capitalize">{activeTab.replace('-', ' ')}</h2>

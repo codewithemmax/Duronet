@@ -23,6 +23,34 @@ interface GpoMetric {
   region: string;
 }
 
+interface DrugShortage {
+  id: string;
+  drugName: string;
+  severity: 'Critical' | 'High' | 'Medium' | 'Low';
+  affectedRegions: string[];
+  shortageReason: string;
+  estimatedResolution: string;
+}
+
+interface InventoryItem {
+  currentStock: number;
+  dailyBurnRate: number;
+  daysOfSupply: number;
+}
+
+interface HospitalTelemetry {
+  hospitalId: string;
+  name: string;
+  region: string;
+  inventory: Record<string, InventoryItem>;
+  bedCapacity: string;
+}
+
+interface InventoryStatus {
+  shortages: DrugShortage[];
+  telemetry: HospitalTelemetry[];
+}
+
 interface AIAnalysisResponse {
   riskAnalysis: string;
   alternateManufacturerRecommendation: string;
@@ -107,6 +135,22 @@ export async function fetchLogisticsStatus(): Promise<{
     return await response.json();
   } catch (error) {
     console.error('Error fetching logistics status:', error);
+    throw error;
+  }
+}
+
+/**
+ * Fetch inventory status (hospital telemetry + drug shortages)
+ */
+export async function fetchInventoryStatus(): Promise<InventoryStatus> {
+  try {
+    const response = await fetch(`${API_BASE}/api/inventory/status`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch inventory status: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching inventory status:', error);
     throw error;
   }
 }
