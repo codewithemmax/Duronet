@@ -65,10 +65,6 @@ Update this file after every meaningful implementation change.
   - New components rendered conditionally inside the Dashboard via `activeTab`
   - High-fidelity Emerald/Teal dark-mode mock UX implemented
   - Tablet layout corrected so the Sidebar and Main Canvas sit side-by-side at `md`, with the AI Action Panel stacking until `lg`
-- **Unit 11:** AI-Powered Semantic Search (In Progress)
-  - `POST /api/search` endpoint added to `duronet-server`
-  - Gemini semantic query routing implemented with typo, symptom, and brand mapping
-  - `AISearchBar` front-end component added with debounce and dropdown results
 
 
 ## Open Questions

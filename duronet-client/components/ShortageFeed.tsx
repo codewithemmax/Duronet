@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AlertTriangle, AlertCircle, Clock, MapPin } from "lucide-react";
@@ -18,6 +18,8 @@ interface ShortageFeedProps {
   shortages: DrugShortage[];
   isLoading?: boolean;
   error?: string | null;
+  selectedId?: string | null;
+  onSelect?: (shortage: DrugShortage) => void;
 }
 
 const ShortageFeedSkeleton: React.FC = () => (
@@ -66,6 +68,8 @@ export const ShortageFeed: React.FC<ShortageFeedProps> = ({
   shortages,
   isLoading = false,
   error = null,
+  selectedId = null,
+  onSelect,
 }) => {
   if (isLoading) {
     return <ShortageFeedSkeleton />;
@@ -104,12 +108,33 @@ export const ShortageFeed: React.FC<ShortageFeedProps> = ({
       (severityOrder[b.severity.toLowerCase()] ?? 99)
   );
 
+  useEffect(() => {
+    if (!selectedId) return;
+    const el = document.getElementById(`shortage-${selectedId}`);
+    if (el) {
+      try {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // add a temporary highlight
+        el.classList.add('ring-2', 'ring-emerald-500/30');
+        setTimeout(() => {
+          el.classList.remove('ring-2', 'ring-emerald-500/30');
+        }, 1800);
+      } catch (e) {
+        // ignore
+      }
+    }
+  }, [selectedId]);
+
   return (
     <div className="space-y-3">
       {sortedShortages.map((shortage) => (
         <Card
           key={shortage.id}
-          className="p-4 bg-[--bg-surface] border-[--border-default] hover:border-[--accent-emerald]/50 transition-colors cursor-pointer"
+          id={`shortage-${shortage.id}`}
+          onClick={() => onSelect?.(shortage)}
+          className={`p-4 bg-[--bg-surface] border-[--border-default] hover:border-[--accent-emerald]/50 transition-colors cursor-pointer ${
+            selectedId === shortage.id ? 'ring-2 ring-emerald-500/30' : ''
+          }`}
         >
           {/* Title with Severity */}
           <div className="flex items-start justify-between gap-3 mb-3">

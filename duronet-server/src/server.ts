@@ -5,7 +5,7 @@ import fdaAlerts from './data/fda-alerts.json';
 import gpoMetrics from './data/gpo-metrics.json';
 import drugShortages from './data/drug-shortages.json';
 import hospitalTelemetry from './data/hospital-telemetry.json';
-import { analyzeRisk, analyzeShortageRisk } from './services/ai';
+import { analyzeRisk, analyzeShortageRisk, searchShortages } from './services/ai';
 import { ZodError } from 'zod';
 import { deployFivetranConnector } from './services/fivetran';
 
@@ -82,6 +82,22 @@ app.get('/api/inventory/predict', (req, res) => {
     predictions,
     timestamp: new Date().toISOString(),
   });
+});
+
+app.post('/api/search', async (req, res) => {
+  try {
+    const query = String(req.body.query || '').trim();
+
+    if (!query || query.length < 1) {
+      return res.status(400).json({ error: 'Missing search query in request body' });
+    }
+
+    const matches = await searchShortages(query, drugShortages);
+    res.json({ query, matches });
+  } catch (error: any) {
+    console.error('Search Error:', error);
+    res.status(500).json({ error: error?.message || 'Failed to execute semantic search' });
+  }
 });
 
 app.get('/api/logistics/status', (req, res) => {

@@ -16,6 +16,7 @@ import { Sidebar, ENTERPRISE_MODULES } from "@/components/Sidebar";
 import dynamic from "next/dynamic";
 import { AlertFeed, GlobalThreatRadar, ProjectSettings } from "@/components/Placeholders";
 import { AIActionPanel } from "@/components/AIActionPanel";
+import { AISearchBar } from "@/components/AISearchBar";
 import { InventoryForecast } from "@/components/InventoryForecast";
 import { TransferPipelines } from "@/components/TransferPipelines";
 import { AILogs } from "@/components/AILogs";
@@ -92,6 +93,7 @@ export default function Dashboard() {
   const [alertsLoading, setAlertsLoading] = useState(true);
   const [alertsError, setAlertsError] = useState<string | null>(null);
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
+  const [selectedShortageId, setSelectedShortageId] = useState<string | null>(null);
   
   // Inventory state
   const [inventoryTelemetry, setInventoryTelemetry] = useState<HospitalTelemetry[]>([]);
@@ -183,6 +185,46 @@ export default function Dashboard() {
   const handleModuleClick = (module: (typeof ENTERPRISE_MODULES)[0]) => {
     setSelectedModule(module);
     setIsRoadmapOpen(true);
+  };
+
+  const handleSearchSelect = (id: string, kind: 'shortage' | 'alert') => {
+    // Bring user to the inventory dashboard and handle selection by kind.
+    setActiveTab('inventory-dashboard');
+    if (kind === 'shortage') {
+      const found = drugShortages.find((s) => s.id === id || s.drugName === id);
+      if (found) {
+        setSelectedShortageId(found.id);
+        // Try to find an existing FDA alert that matches the drug name
+        const matchingAlert = alerts.find(
+          (a) => a.product === found.drugName || a.product?.toLowerCase().includes(found.drugName.toLowerCase())
+        );
+
+        if (matchingAlert) {
+          handleAlertClick(matchingAlert);
+        } else {
+          // Create a lightweight synthetic Alert so the AI panel can operate on context
+          const synthetic: Alert = {
+            id: `search-s-${found.id}`,
+            date: new Date().toISOString(),
+            product: found.drugName,
+            manufacturer: "",
+            reason: found.shortageReason,
+            severity: (found.severity?.toLowerCase() as any) || 'medium',
+          };
+          handleAlertClick(synthetic);
+        }
+      }
+      console.log('AISearch selected shortage:', id);
+      return;
+    }
+
+    // kind === 'alert'
+    const alertMatch = alerts.find((a) => a.id === id);
+    if (alertMatch) {
+      setSelectedShortageId(null);
+      handleAlertClick(alertMatch);
+    }
+    console.log('AISearch selected alert:', id, alertMatch);
   };
 
   const handleDeploy = async () => {
@@ -335,12 +377,16 @@ export default function Dashboard() {
         onModuleClick={handleModuleClick} 
       />
 
-      {/* Center Main Canvas */}
-      <main className="flex-1 flex flex-col overflow-hidden bg-background/50 relative">
-        {activeTab === 'inventory-dashboard' && (
+      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+        {/* Center Main Canvas */}
+        <main className="flex-1 flex flex-col overflow-hidden bg-background/50 relative">
+          {activeTab === 'inventory-dashboard' && (
           <div className="flex-1 flex flex-col w-full h-full">
-            <header className="h-16 border-b border-border bg-card/50 flex items-center px-8 shadow-sm shrink-0">
+            <header className="h-16 border-b border-border bg-card/50 flex items-center justify-between px-8 shadow-sm shrink-0">
               <h2 className="text-xl font-semibold tracking-tight">Predictive Inventory Dashboard</h2>
+              <div className="ml-6 w-full max-w-lg hidden md:block">
+                <AISearchBar onSelect={(id, kind) => handleSearchSelect(id, kind)} />
+              </div>
             </header>
             <div className="flex-1 p-8 overflow-auto flex flex-col gap-6">
               {/* Top section: Drug Shortages */}
@@ -354,6 +400,8 @@ export default function Dashboard() {
                   shortages={drugShortages}
                   isLoading={inventoryLoading}
                   error={inventoryError}
+                  selectedId={selectedShortageId}
+                  onSelect={(s) => setSelectedShortageId(s.id)}
                 />
               </div>
 
@@ -421,25 +469,26 @@ export default function Dashboard() {
             </div>
           </div>
         )}
-      </main>
+        </main>
 
-      <AIActionPanel
-        alerts={alerts}
-        selectedAlert={selectedAlert}
-        selectedAlertId={selectedAlert?.id}
-        onAlertClick={handleAlertClick}
-        alertsLoading={alertsLoading}
-        alertsError={alertsError}
-        analysisLoading={analysisLoading}
-        analysisError={analysisError}
-        aiAnalysis={aiAnalysis}
-        onDeploy={handleDeploy}
-        isDeploying={isDeploying}
-        deploymentStage={deploymentStage}
-        deploymentId={deploymentId}
-        deploymentEta={deploymentEta}
-        onConfirmReceipt={handleConfirmReceipt}
-      />
+        <AIActionPanel
+          alerts={alerts}
+          selectedAlert={selectedAlert}
+          selectedAlertId={selectedAlert?.id}
+          onAlertClick={handleAlertClick}
+          alertsLoading={alertsLoading}
+          alertsError={alertsError}
+          analysisLoading={analysisLoading}
+          analysisError={analysisError}
+          aiAnalysis={aiAnalysis}
+          onDeploy={handleDeploy}
+          isDeploying={isDeploying}
+          deploymentStage={deploymentStage}
+          deploymentId={deploymentId}
+          deploymentEta={deploymentEta}
+          onConfirmReceipt={handleConfirmReceipt}
+        />
+      </div>
 
       {/* Enterprise Roadmap Modal Dialog */}
       <Dialog open={isRoadmapOpen} onOpenChange={setIsRoadmapOpen}>

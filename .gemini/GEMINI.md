@@ -7,13 +7,13 @@ You must strictly follow the rules, architecture, and workflow defined below. **
 ## 1. Application Building Context
 Before implementing any feature or making architectural decisions, you must read the following files in this exact order to understand the current state of the project:
 
-1. `context/project-overview.md` — Product definition, goals, features, and scope.
-2. `context/architecture.md` — System structure, boundaries, storage model, and invariants.
-3. `context/ui-context.md` — Theme, colors, typography, and component conventions.
-4. `context/code-standards.md` — Implementation rules and conventions.
-5. `context/ai-workflow-rules.md` — Development workflow, scoping rules, and delivery approach.
-6. `context/specs/master-build-plan.md` — The 7-unit implementation plan.
-7. `context/progress-tracker.md` — Current phase, completed work, open questions, and next steps.
+1. `SIX-FILE-CONTEXT/context/project-overview.md` — Product definition, goals, features, and scope.
+2. `SIX-FILE-CONTEXT/context/architecture.md` — System structure, boundaries, storage model, and invariants.
+3. `SIX-FILE-CONTEXT/context/ui-context.md` — Theme, colors, typography, and component conventions.
+4. `SIX-FILE-CONTEXT/context/code-standards.md` — Implementation rules and conventions.
+5. `SIX-FILE-CONTEXT/context/ai-workflow-rules.md` — Development workflow, scoping rules, and delivery approach.
+6. `SIX-FILE-CONTEXT/context/specs/master-build-plan.md` — The 7-unit implementation plan.
+7. `SIX-FILE-CONTEXT/context/progress-tracker.md` — Current phase, completed work, open questions, and next steps.
 
 ## 2. Immutable Project Invariants (The "Stay on Job" Directives)
 * **Decoupled Architecture:** The Next.js frontend (`duronet-client`) and Node.js backend (`duronet-server`) must remain completely separate. Never mix their logic.

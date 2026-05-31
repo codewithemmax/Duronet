@@ -60,6 +60,110 @@ const AIResponseSchema = z.object({
 
 type AIResponse = z.infer<typeof AIResponseSchema>;
 
+function normalizeQuery(query: string) {
+  return query.trim().toLowerCase();
+}
+
+function localShortageSearch(query: string, activeShortages: any[]) {
+  const normalized = normalizeQuery(query);
+  if (!normalized) return [];
+
+  const scores = activeShortages.map((shortage) => {
+    const name = String(shortage.drugName || '').toLowerCase();
+    const reason = String(shortage.shortageReason || '').toLowerCase();
+    const regions = (shortage.affectedRegions || []).map(String).join(' ').toLowerCase();
+    const id = String(shortage.id || '').toLowerCase();
+
+    let score = 0;
+    if (name.includes(normalized)) score += 100;
+    if (reason.includes(normalized)) score += 40;
+    if (regions.includes(normalized)) score += 20;
+    if (id.includes(normalized)) score += 30;
+
+    const words = normalized.split(/\s+/);
+    words.forEach((word) => {
+      if (name.includes(word)) score += 15;
+      if (reason.includes(word)) score += 10;
+      if (regions.includes(word)) score += 5;
+    });
+
+    return { score, shortage };
+  });
+
+  return scores
+    .filter((item) => item.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 8)
+    .map((item) => item.shortage);
+}
+
+function buildFallbackAIResponse(alertPayload: any, gpoMetrics: any): AIResponse {
+  const productName = String(alertPayload.product || alertPayload.drugName || 'the product');
+  const severity = String(alertPayload.severity || 'medium').toLowerCase();
+  const isCritical = severity === 'critical' || severity === 'high';
+  const available = isCritical ? 120 : 320;
+  const committed = isCritical ? 95 : 160;
+  const requested = isCritical ? 72 : 44;
+
+  return {
+    riskAnalysis: `Fallback AI analysis for ${productName}. Based on current FDA alert severity and regional supplier reliability, the product is ${isCritical ? 'at high supply risk' : 'vulnerable but manageable'}.`,
+    alternateManufacturerRecommendation: `Consider sourcing ${productName} from alternate verified distributors and prioritize high-reliability suppliers with established regional logistics support.`,
+    surplusData: {
+      hub: 'Fallback Supply Hub',
+      totalStock: 520,
+      committed,
+      available,
+      requested,
+      isFeasible: available >= requested,
+    },
+    fivetranConfigDraft: {
+      service: 'fivetran',
+      group_id: `duro-net-fallback-${Date.now()}`,
+      paused: true,
+      sync_frequency: 60,
+      config: {
+        schema: 'duro_net',
+        table: 'fda_alerts',
+        source: 'fallback',
+        alertProduct: productName,
+      },
+    },
+    fivetranPayload: {
+      service: 'fivetran',
+      config: {
+        schema: 'duro_net',
+        table: 'fda_alerts',
+        sheet_id: 'fallback_sheet',
+        named_range: 'A1:D1',
+      },
+    },
+  };
+}
+
+function buildFallbackShortageAnalysis(shortageAlert: any, requestedAmount: number): ShortageAnalysisResponse {
+  const productName = String(shortageAlert.drugName || shortageAlert.product || 'product');
+  const isHighRisk = String(shortageAlert.severity || '').toLowerCase() === 'critical';
+  const available = Math.max(0, requestedAmount * (isHighRisk ? 2 : 4));
+
+  return {
+    surplusData: {
+      hub: 'Fallback Distribution Hub',
+      totalStock: requestedAmount * 4,
+      committed: requestedAmount * 2,
+      available,
+      requested: requestedAmount,
+      isFeasible: available >= requestedAmount,
+    },
+    mitigationStrategy: `Use priority rerouting and alternate supplier channels for ${productName}. Increase inventory visibility and expedite shipments for high-risk shortages.`,
+    stakeholdersRequired: ['Pharmacy Director', 'Supply Chain Manager'],
+  };
+}
+
+function isGeminiNetworkError(err: any) {
+  const code = err?.cause?.code || err?.code || err?.cause?.cause?.code;
+  return code === 'UND_ERR_CONNECT_TIMEOUT' || code === 'UND_ERR_SOCKET' || code === 'ECONNRESET' || code === 'EAI_AGAIN';
+}
+
 // ----------------------------
 // analyzeShortageRisk
 // ----------------------------
@@ -121,6 +225,10 @@ export async function analyzeShortageRisk(
       throw err;
     }
     console.error('Gemini error (shortage):', err);
+    if (isGeminiNetworkError(err)) {
+      console.warn('Network error detected while calling Gemini for shortage analysis. Using local fallback.');
+      return buildFallbackShortageAnalysis(shortageAlert, requestedAmount);
+    }
     throw new Error('Failed to analyze shortage risk');
   }
 }
@@ -210,6 +318,62 @@ export async function analyzeRisk(alertPayload: any, gpoMetrics: any) {
       throw err;
     }
     console.error('Gemini error (ai):', err);
+    if (isGeminiNetworkError(err)) {
+      console.warn('Network error detected while calling Gemini AI analysis. Using local fallback response.');
+      return buildFallbackAIResponse(alertPayload, gpoMetrics);
+    }
     throw new Error('Failed to generate AI analysis');
+  }
+}
+
+export async function searchShortages(query: string, activeShortages: any[]) {
+  if (!GEMINI_API_KEY) throw new Error('GEMINI_API_KEY not configured.');
+
+  const systemPrompt = `You are the DuroNet Semantic Search Copilot.\n\nCRITICAL: ZERO-PHI BOUNDARY - Do NOT process or mention PHI, patient data, or EHR. Work only with the active shortage inventory data provided.\n\nYour job is to map the user's search query to the correct active drug shortages using intent, synonyms, misspellings, brand/generic names, and symptom associations. Return ONLY a strict JSON array of matching shortage objects. If nothing matches, return an empty array [].`;
+
+  const userPrompt = `User Query: "${query}"\n\nActive Shortages:\n${JSON.stringify(activeShortages, null, 2)}\n\nReturn only a JSON array of objects with these fields:\n- id\n- drugName\n- severity\n- affectedRegions\n- shortageReason\n- estimatedResolution\n\nDo not include any extra text, explanation, or markdown.`;
+
+  const responseSchema: Schema = {
+    type: Type.ARRAY,
+    items: {
+      type: Type.OBJECT,
+      properties: {
+        id: { type: Type.STRING },
+        drugName: { type: Type.STRING },
+        severity: { type: Type.STRING },
+        affectedRegions: { type: Type.ARRAY, items: { type: Type.STRING } },
+        shortageReason: { type: Type.STRING },
+        estimatedResolution: { type: Type.STRING },
+      },
+      required: ['id', 'drugName', 'severity', 'affectedRegions', 'shortageReason', 'estimatedResolution'],
+    },
+  };
+
+  try {
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: [
+        {
+          role: 'user',
+          parts: [{ text: systemPrompt }, { text: userPrompt }],
+        },
+      ],
+      config: {
+        responseMimeType: 'application/json',
+        responseSchema,
+      },
+    });
+
+    if (!response.text) throw new Error('Empty response from Gemini');
+
+    const parsed = JSON.parse(response.text);
+    return parsed;
+  } catch (err: any) {
+    console.error('Gemini error (search):', err);
+    if (isGeminiNetworkError(err)) {
+      console.warn('Network error detected while calling Gemini search. Falling back to local semantic matcher.');
+      return localShortageSearch(query, activeShortages);
+    }
+    throw new Error('Failed to execute semantic search');
   }
 }

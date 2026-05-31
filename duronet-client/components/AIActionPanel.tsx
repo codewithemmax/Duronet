@@ -109,7 +109,7 @@ export function AIActionPanel({
   };
 
   return (
-    <aside className="w-full md:w-96 border-t md:border-t-0 md:border-l border-border bg-card flex flex-col shadow-xl z-10 shrink-0">
+    <aside className="w-full lg:w-96 border-t lg:border-t-0 lg:border-l border-border bg-card flex flex-col shadow-xl z-10 shrink-0">
       <div className="p-6 border-b border-border">
         <div className="flex items-center justify-between gap-4">
           <div>

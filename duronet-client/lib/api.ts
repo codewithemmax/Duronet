@@ -197,6 +197,68 @@ export async function fetchInventoryStatus(): Promise<InventoryStatus> {
   }
 }
 
+export interface SearchResult {
+  id: string;
+  drugName: string;
+  severity: string;
+  affectedRegions: string[];
+  shortageReason: string;
+  estimatedResolution: string;
+}
+
+export type SearchKind = 'shortage' | 'alert';
+
+export interface UnifiedSearchResult extends SearchResult {
+  kind: SearchKind;
+  // for alerts, product/manufacturer/date are available
+  product?: string;
+  manufacturer?: string;
+  date?: string;
+}
+
+/**
+ * Search both shortages (via AI search) and the FDA alerts stream, returning combined matches.
+ */
+export async function searchAll(query: string): Promise<UnifiedSearchResult[]> {
+  try {
+    const [shortagesResp, alerts] = await Promise.all([
+      searchShortages(query).catch(() => [] as SearchResult[]),
+      fetchFdaAlerts().catch(() => [] as FdaAlert[]),
+    ]);
+
+    const shortageResults: UnifiedSearchResult[] = shortagesResp.map((s) => ({
+      ...s,
+      kind: 'shortage',
+    }));
+
+    const normalized = query.trim().toLowerCase();
+    const alertMatches = alerts
+      .filter((a) =>
+        a.product.toLowerCase().includes(normalized) ||
+        a.reason.toLowerCase().includes(normalized) ||
+        a.manufacturer.toLowerCase().includes(normalized)
+      )
+      .map((a) => ({
+        id: `alert-${a.id}`,
+        drugName: a.product,
+        severity: a.severity,
+        affectedRegions: [],
+        shortageReason: a.reason,
+        estimatedResolution: '',
+        kind: 'alert',
+        product: a.product,
+        manufacturer: a.manufacturer,
+        date: a.date,
+      } as UnifiedSearchResult));
+
+    // Merge shortages first, then alerts
+    return [...shortageResults, ...alertMatches];
+  } catch (error) {
+    console.error('Error in unified search:', error);
+    throw error;
+  }
+}
+
 export async function fetchInventoryPrediction(
   drugName = 'Albuterol Sulfate'
 ): Promise<InventoryPredictionResponse> {
@@ -215,6 +277,28 @@ export async function fetchInventoryPrediction(
     return await response.json();
   } catch (error) {
     console.error('Error fetching inventory prediction:', error);
+    throw error;
+  }
+}
+
+export async function searchShortages(query: string): Promise<SearchResult[]> {
+  try {
+    const response = await fetch(`${API_BASE}/api/search`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to search shortages: ${response.statusText}`);
+    }
+
+    const payload = await response.json();
+    return payload.matches || [];
+  } catch (error) {
+    console.error('Error searching shortages:', error);
     throw error;
   }
 }
