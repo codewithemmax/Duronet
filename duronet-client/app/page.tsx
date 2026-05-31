@@ -13,18 +13,21 @@ import {
 } from "@/components/ui/dialog";
 import { Lock, AlertCircle, Loader, Globe, Grid, Bell, Database, Server, Terminal, Settings, Package } from "lucide-react";
 import { Sidebar, ENTERPRISE_MODULES } from "@/components/Sidebar";
-import { 
-  AlertFeed, 
-  AIAnalysisDisplay, 
-  GlobalThreatRadar, 
-  RiskMatrix, 
-  FivetranConnectors, 
-  ProjectSettings 
-} from "@/components/Placeholders";
+import dynamic from "next/dynamic";
+import { AlertFeed, GlobalThreatRadar, ProjectSettings } from "@/components/Placeholders";
+import { AIActionPanel } from "@/components/AIActionPanel";
+import { InventoryForecast } from "@/components/InventoryForecast";
+import { TransferPipelines } from "@/components/TransferPipelines";
+import { AILogs } from "@/components/AILogs";
 import { InventoryMatrix } from "@/components/InventoryMatrix";
 import { ShortageFeed } from "@/components/ShortageFeed";
-import { fetchFdaAlerts, analyzeAlert, deployFivetranConfig, fetchInventoryStatus } from "@/lib/api";
+import { fetchFdaAlerts, analyzeAlert, deployFivetranConfig, fetchInventoryStatus, fetchInventoryPrediction, InventoryPredictionResponse } from "@/lib/api";
 import { toast } from "sonner";
+
+const GlobalRadarMap = dynamic(
+  () => import("@/components/GlobalRadarMap"),
+  { ssr: false }
+);
 
 interface Alert {
   id: string;
@@ -35,10 +38,29 @@ interface Alert {
   severity: "critical" | "high" | "medium" | "low";
 }
 
+interface SurplusData {
+  hub: string;
+  totalStock: number;
+  committed: number;
+  available: number;
+  requested: number;
+  isFeasible: boolean;
+}
+
 interface AIAnalysis {
   riskAnalysis: string;
   alternateManufacturerRecommendation: string;
+  surplusData: SurplusData;
   fivetranConfigDraft: Record<string, any>;
+  fivetranPayload: {
+    service: string;
+    config: {
+      schema: string;
+      table: string;
+      sheet_id: string;
+      named_range: string;
+    };
+  };
 }
 
 interface HospitalTelemetry {
@@ -76,6 +98,9 @@ export default function Dashboard() {
   const [drugShortages, setDrugShortages] = useState<DrugShortage[]>([]);
   const [inventoryLoading, setInventoryLoading] = useState(true);
   const [inventoryError, setInventoryError] = useState<string | null>(null);
+  const [inventoryPrediction, setInventoryPrediction] = useState<InventoryPredictionResponse | null>(null);
+  const [predictionLoading, setPredictionLoading] = useState(true);
+  const [predictionError, setPredictionError] = useState<string | null>(null);
   
   // AI Analysis state
   const [aiAnalysis, setAiAnalysis] = useState<AIAnalysis | null>(null);
@@ -84,6 +109,9 @@ export default function Dashboard() {
   const [isDeploying, setIsDeploying] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [deploymentId, setDeploymentId] = useState<string | null>(null);
+  const [deploymentStage, setDeploymentStage] = useState<'idle' | 'inTransit' | 'received'>('idle');
+  const [deploymentEta, setDeploymentEta] = useState<string | null>(null);
+  const [safeAlertIds, setSafeAlertIds] = useState<string[]>([]);
 
   // Fetch alerts and inventory on component mount
   useEffect(() => {
@@ -95,7 +123,7 @@ export default function Dashboard() {
         setAlerts(alertsData);
         setAlertsError(null);
       } catch (error) {
-        setAlertsError("Failed to load alerts. Make sure the backend is running on port 8080.");
+        setAlertsError("Failed to load alerts.");
         console.error("Error loading alerts:", error);
       } finally {
         setAlertsLoading(false);
@@ -114,6 +142,18 @@ export default function Dashboard() {
       } finally {
         setInventoryLoading(false);
       }
+
+      try {
+        setPredictionLoading(true);
+        const predictionData = await fetchInventoryPrediction('Albuterol Sulfate');
+        setInventoryPrediction(predictionData);
+        setPredictionError(null);
+      } catch (error) {
+        setPredictionError("Failed to load inventory predictions. Ensure the prediction endpoint is available.");
+        console.error("Error loading inventory prediction:", error);
+      } finally {
+        setPredictionLoading(false);
+      }
     };
 
     loadData();
@@ -124,6 +164,9 @@ export default function Dashboard() {
     setSelectedAlert(alert);
     setAiAnalysis(null);
     setAnalysisError(null);
+    setDeploymentStage('idle');
+    setDeploymentId(null);
+    setDeploymentEta(null);
     setAnalysisLoading(true);
 
     try {
@@ -143,22 +186,43 @@ export default function Dashboard() {
   };
 
   const handleDeploy = async () => {
-    if (!aiAnalysis?.fivetranConfigDraft) return;
+    if (!aiAnalysis?.fivetranConfigDraft || !selectedAlert) return;
 
     setIsDeploying(true);
     setDeploymentId(null);
+
     try {
       const response = await deployFivetranConfig(aiAnalysis.fivetranConfigDraft);
       if (response && response.connectorId) {
         setDeploymentId(response.connectorId);
       }
-      toast.success("Deployment Successful");
+
+      const eta = new Date(Date.now() + 2 * 60 * 60 * 1000).toLocaleString([], {
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+      });
+
+      setDeploymentEta(eta);
+      setDeploymentStage('inTransit');
+      toast.success('Pipeline deployed and transfer authorized. In transit.');
     } catch (error: any) {
-      console.error("Deployment error:", error);
-      toast.error(error.message || "Failed to deploy Fivetran connector.");
+      console.error('Deployment error:', error);
+      toast.error(error.message || 'Failed to deploy Fivetran connector.');
     } finally {
       setIsDeploying(false);
     }
+  };
+
+  const handleConfirmReceipt = () => {
+    if (!selectedAlert) return;
+
+    setDeploymentStage('received');
+    setSafeAlertIds((current) =>
+      current.includes(selectedAlert.id) ? current : [...current, selectedAlert.id]
+    );
+    toast.success('Physical dock receipt confirmed and inventory marked safe.');
   };
 
   return (
@@ -300,9 +364,13 @@ export default function Dashboard() {
                     Hospital Inventory Status
                   </h3>
                 </div>
+                <div className="overflow-hidden rounded-3xl border border-border bg-slate-950/80 p-4 mb-6">
+                  <GlobalRadarMap />
+                </div>
                 <div className="overflow-auto flex-1">
                   <InventoryMatrix
                     telemetry={inventoryTelemetry}
+                    prediction={inventoryPrediction}
                     isLoading={inventoryLoading}
                     error={inventoryError}
                   />
@@ -327,21 +395,23 @@ export default function Dashboard() {
                    </div>
                 </div>
                 <div className="flex-1 bg-background relative min-h-0">
-                   <GlobalThreatRadar alerts={alerts} />
+                   <GlobalThreatRadar alerts={alerts} safeAlertIds={safeAlertIds} />
                 </div>
               </div>
             </div>
           </div>
         )}
         
-        {activeTab === 'risk-matrix' && <RiskMatrix />}
+        {activeTab === 'risk-matrix' && <InventoryForecast />}
         
-        {activeTab === 'fivetran' && <FivetranConnectors />}
+        {activeTab === 'fivetran' && <TransferPipelines />}
+
+        {activeTab === 'logs' && <AILogs />}
 
         {activeTab === 'settings' && <ProjectSettings />}
 
         {/* Fallback for undeveloped tabs */}
-        {!['inventory-dashboard', 'global-radar', 'risk-matrix', 'fivetran', 'settings'].includes(activeTab) && (
+        {!['inventory-dashboard', 'global-radar', 'risk-matrix', 'fivetran', 'settings', 'logs'].includes(activeTab) && (
           <div className="flex-1 flex flex-col w-full h-full">
             <header className="h-16 border-b border-border bg-card/50 flex items-center px-8 shadow-sm shrink-0">
               <h2 className="text-xl font-semibold tracking-tight capitalize">{activeTab.replace('-', ' ')}</h2>
@@ -353,92 +423,23 @@ export default function Dashboard() {
         )}
       </main>
 
-      {/* Right Action Panel - AI & Integrations */}
-      <aside className="w-full md:w-96 border-t md:border-t-0 md:border-l border-border bg-card flex flex-col shadow-xl z-10 shrink-0">
-        <div className="p-6 border-b border-border">
-          <h3 className="text-lg font-semibold tracking-tight">AI Action Panel</h3>
-        </div>
-        <div className="flex-1 p-6 overflow-auto flex flex-col gap-4">
-          {/* Alerts Section */}
-          <div>
-            <h4 className="text-sm font-semibold text-foreground mb-3 uppercase tracking-widest opacity-70">
-              Active Alerts
-            </h4>
-            {alertsError ? (
-              <div className="p-4 rounded-md border border-state-error/30 bg-state-error/10">
-                <p className="text-xs text-state-error flex items-center gap-2">
-                  <AlertCircle className="h-4 w-4" />
-                  {alertsError}
-                </p>
-              </div>
-            ) : (
-              <AlertFeed
-                alerts={alerts}
-                onAlertClick={handleAlertClick}
-                selectedAlertId={selectedAlert?.id}
-                isLoading={alertsLoading}
-              />
-            )}
-          </div>
-
-          {/* Analysis Section */}
-          {selectedAlert && (
-            <div className="border-t border-border/30 pt-4">
-              <h4 className="text-sm font-semibold text-foreground mb-3 uppercase tracking-widest opacity-70">
-                AI Analysis
-              </h4>
-              {analysisError ? (
-                <div className="p-4 rounded-md border border-state-error/30 bg-state-error/10 mb-4">
-                  <p className="text-xs text-state-error flex items-center gap-2">
-                    <AlertCircle className="h-4 w-4" />
-                    {analysisError}
-                  </p>
-                </div>
-              ) : null}
-              <AIAnalysisDisplay
-                isLoading={analysisLoading}
-                riskAnalysis={aiAnalysis?.riskAnalysis}
-                recommendation={aiAnalysis?.alternateManufacturerRecommendation}
-                fivetranConfig={aiAnalysis?.fivetranConfigDraft}
-              />
-              {aiAnalysis && (
-                <div className="mt-6 flex flex-col gap-4">
-                  <Button
-                    className="w-full bg-accent-emerald hover:bg-accent-emerald/90 text-background font-semibold min-h-[44px]"
-                    disabled={analysisLoading || isDeploying}
-                    onClick={handleDeploy}
-                  >
-                    {analysisLoading ? (
-                      <>
-                        <Loader className="h-4 w-4 mr-2 animate-spin" />
-                        Generating...
-                      </>
-                    ) : isDeploying ? (
-                      <>
-                        <Loader className="h-4 w-4 mr-2 animate-spin" />
-                        Deploying...
-                      </>
-                    ) : (
-                      "Approve & Deploy"
-                    )}
-                  </Button>
-                  
-                  {deploymentId && (
-                    <div className="p-4 rounded-md border border-accent-emerald bg-accent-emerald/10">
-                      <p className="text-sm font-semibold text-accent-emerald mb-1">
-                        ✅ Live Data Pipeline Provisioned
-                      </p>
-                      <p className="text-xs text-muted-foreground font-mono mt-2">
-                        Fivetran Connector ID: <span className="font-bold text-foreground">{deploymentId}</span>
-                      </p>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </aside>
+      <AIActionPanel
+        alerts={alerts}
+        selectedAlert={selectedAlert}
+        selectedAlertId={selectedAlert?.id}
+        onAlertClick={handleAlertClick}
+        alertsLoading={alertsLoading}
+        alertsError={alertsError}
+        analysisLoading={analysisLoading}
+        analysisError={analysisError}
+        aiAnalysis={aiAnalysis}
+        onDeploy={handleDeploy}
+        isDeploying={isDeploying}
+        deploymentStage={deploymentStage}
+        deploymentId={deploymentId}
+        deploymentEta={deploymentEta}
+        onConfirmReceipt={handleConfirmReceipt}
+      />
 
       {/* Enterprise Roadmap Modal Dialog */}
       <Dialog open={isRoadmapOpen} onOpenChange={setIsRoadmapOpen}>

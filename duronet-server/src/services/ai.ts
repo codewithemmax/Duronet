@@ -1,84 +1,78 @@
 import { GoogleGenAI, Type, Schema } from '@google/genai';
 import dotenv from 'dotenv';
-import { z } from 'zod';
+import { z, ZodError } from 'zod';
 
 dotenv.config();
 
-// Initialize the Google Gen AI client with explicit model and API key
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
 if (!GEMINI_API_KEY) {
-  console.warn('Warning: GEMINI_API_KEY is not set in environment variables.');
+  console.warn('GEMINI_API_KEY is not configured. AI calls will fail without a key.');
 }
 
-const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY || '' });
+const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
-// ============================================
-// UNIT 04: Shortage Risk Analysis Schema
-// ============================================
+// ----------------------------
+// Zod schemas
+// ----------------------------
 
 const SurplusDataSchema = z.object({
-  hub: z.string().describe('Regional hub name (e.g., Regional Hub B)'),
-  totalStock: z.number().describe('Total units in stock at the surplus hub'),
-  committed: z.number().describe('Units already committed to other orders'),
-  available: z.number().describe('Truly available units (totalStock - committed)'),
-  requested: z.number().describe('Units requested for emergency transfer'),
-  isFeasible: z.boolean().describe('Whether the transfer is logistically feasible'),
+  hub: z.string(),
+  totalStock: z.number(),
+  committed: z.number(),
+  available: z.number(),
+  requested: z.number(),
+  isFeasible: z.boolean(),
 });
 
 const ShortageAnalysisResponseSchema = z.object({
   surplusData: SurplusDataSchema,
-  mitigationStrategy: z.string().describe('Concise explanation of the recommended transfer strategy'),
-  stakeholdersRequired: z.array(z.string()).describe('List of stakeholder roles required for approval'),
+  mitigationStrategy: z.string(),
+  stakeholdersRequired: z.array(z.string()),
 });
 
 type ShortageAnalysisResponse = z.infer<typeof ShortageAnalysisResponseSchema>;
 
-/**
- * Analyze a shortage alert and recommend an emergency regional surplus transfer.
- * This function acts as a Prescriptive Analytics Copilot, identifying feasible
- * inventory transfers to mitigate critical shortages.
- *
- * @param shortageAlert - The shortage alert data (drugName, severity, affectedRegions, etc.)
- * @param requestedAmount - The quantity needed for the emergency transfer
- * @param hospitalTelemetry - Regional hospital inventory data
- * @returns Structured JSON with surplus location, feasibility, and mitigation strategy
- */
+const FivetranConfigSchema = z.object({
+  service: z.string(),
+  group_id: z.string(),
+  paused: z.boolean().optional(),
+  sync_frequency: z.number().optional(),
+  config: z.record(z.string(), z.any()),
+});
+
+const FivetranPayloadSchema = z.object({
+  service: z.string(),
+  config: z.object({
+    schema: z.string(),
+    table: z.string(),
+    sheet_id: z.string(),
+    named_range: z.string(),
+  }),
+});
+
+const AIResponseSchema = z.object({
+  riskAnalysis: z.string(),
+  alternateManufacturerRecommendation: z.string(),
+  surplusData: SurplusDataSchema,
+  fivetranConfigDraft: FivetranConfigSchema,
+  fivetranPayload: FivetranPayloadSchema,
+});
+
+type AIResponse = z.infer<typeof AIResponseSchema>;
+
+// ----------------------------
+// analyzeShortageRisk
+// ----------------------------
 export async function analyzeShortageRisk(
   shortageAlert: any,
   requestedAmount: number,
   hospitalTelemetry: any[] = []
 ): Promise<ShortageAnalysisResponse> {
-  if (!GEMINI_API_KEY) {
-    throw new Error('GEMINI_API_KEY is not configured. Please set it in your .env file.');
-  }
+  if (!GEMINI_API_KEY) throw new Error('GEMINI_API_KEY not configured.');
 
-  const systemPrompt = `You are an expert Hospital Supply Chain Copilot for DuroNet.
+  const systemPrompt = `You are a Hospital Supply Chain Copilot for DuroNet.\n\nCRITICAL: ZERO-PHI BOUNDARY - Do NOT process or mention PHI, patient data, or EHR. Work strictly with aggregate inventory, burn rates, and logistics.\n\nReturn only valid JSON that matches the required schema.`;
 
-CRITICAL RULE - Zero-PHI Boundary:
-- NEVER process, infer, or mention Protected Health Information (PHI), patient data, or Electronic Health Records (EHR).
-- NEVER reference specific hospital names, patient counts, or clinical outcomes.
-- Focus STRICTLY on upstream GPO metrics, inventory telemetry (stock levels, burn rates), and logistics feasibility.
-- You are an agent, NOT a clinician. Your role is purely supply chain optimization.
-
-Your Task:
-Given a critical drug shortage alert and hospital inventory telemetry data, your job is to:
-1. Identify regional hubs with surplus inventory of the requested drug.
-2. Calculate logistical feasibility by comparing "available" units (Total - Committed) against the requested quantity.
-3. Recommend the best regional surplus to route the emergency transfer.
-4. Provide a concise mitigation strategy explaining the transfer route.
-5. Identify stakeholders who must approve the transfer (always include "Pharmacy Director" and "Supply Chain Manager").
-
-Return your response as a valid JSON object with NO additional text, NO markdown, NO code blocks.`;
-
-  const userPrompt = `Shortage Alert:
-${JSON.stringify(shortageAlert, null, 2)}
-
-Requested Emergency Transfer Quantity: ${requestedAmount} units
-
-Regional Hospital Telemetry Data:
-${JSON.stringify(hospitalTelemetry, null, 2)}
-
-Based on this data, identify the best regional hub to source the surplus inventory and provide the mitigation strategy.`;
+  const userPrompt = `Shortage Alert:\n${JSON.stringify(shortageAlert, null, 2)}\n\nRequested Amount: ${requestedAmount}\n\nHospital Telemetry:\n${JSON.stringify(hospitalTelemetry, null, 2)}\n\nRespond with a JSON object: {"surplusData": {"hub":string,"totalStock":number,"committed":number,"available":number,"requested":number,"isFeasible":boolean}, "mitigationStrategy": string, "stakeholdersRequired": [string] }`;
 
   const responseSchema: Schema = {
     type: Type.OBJECT,
@@ -96,10 +90,7 @@ Based on this data, identify the best regional hub to source the surplus invento
         required: ['hub', 'totalStock', 'committed', 'available', 'requested', 'isFeasible'],
       },
       mitigationStrategy: { type: Type.STRING },
-      stakeholdersRequired: {
-        type: Type.ARRAY,
-        items: { type: Type.STRING },
-      },
+      stakeholdersRequired: { type: Type.ARRAY, items: { type: Type.STRING } },
     },
     required: ['surplusData', 'mitigationStrategy', 'stakeholdersRequired'],
   };
@@ -110,10 +101,7 @@ Based on this data, identify the best regional hub to source the surplus invento
       contents: [
         {
           role: 'user',
-          parts: [
-            { text: systemPrompt },
-            { text: userPrompt },
-          ],
+          parts: [{ text: systemPrompt }, { text: userPrompt }],
         },
       ],
       config: {
@@ -122,76 +110,50 @@ Based on this data, identify the best regional hub to source the surplus invento
       },
     });
 
-    if (!response.text) {
-      throw new Error('Empty response from Gemini API.');
+    if (!response.text) throw new Error('Empty response from Gemini');
+
+    const parsed = JSON.parse(response.text);
+    const validated = ShortageAnalysisResponseSchema.parse(parsed);
+    return validated;
+  } catch (err: any) {
+    if (err instanceof ZodError) {
+      console.error('Validation error from Gemini (shortage):', err.issues);
+      throw err;
     }
-
-    // Parse and validate the response
-    const parsedResponse = JSON.parse(response.text);
-    const validatedResponse = ShortageAnalysisResponseSchema.parse(parsedResponse);
-
-    return validatedResponse;
-  } catch (error: any) {
-    console.error('Shortage Risk Analysis Error:', error);
-    throw new Error(`Failed to analyze shortage risk: ${error.message}`);
+    console.error('Gemini error (shortage):', err);
+    throw new Error('Failed to analyze shortage risk');
   }
 }
 
-// ============================================
-// LEGACY: Unit 06 Risk Analysis (for FDA Alerts)
-// ============================================
-
-const FivetranConfigSchema = z.object({
-  service: z.string(),
-  group_id: z.string(),
-  paused: z.boolean().optional(),
-  sync_frequency: z.number().optional(),
-  config: z.record(z.string(), z.any()),
-});
-
-const AIResponseSchema = z.object({
-  riskAnalysis: z.string(),
-  alternateManufacturerRecommendation: z.string(),
-  fivetranConfigDraft: FivetranConfigSchema,
-});
-
+// ----------------------------
+// analyzeRisk (Unit 05 expansion)
+// ----------------------------
 export async function analyzeRisk(alertPayload: any, gpoMetrics: any) {
-  if (!GEMINI_API_KEY) {
-    throw new Error('GEMINI_API_KEY is not configured. Please set it in your .env file.');
-  }
+  if (!GEMINI_API_KEY) throw new Error('GEMINI_API_KEY not configured.');
 
-  const prompt = `
-You are an expert AI supply chain risk analyst for DuroNet.
-Analyze the following FDA supply chain alert against the provided regional GPO purchase metrics.
+  const systemPrompt = `You are an expert AI supply chain analyst and data engineer for DuroNet.\n\nCRITICAL: ZERO-PHI BOUNDARY - Never process or mention PHI or patient data. Work only with aggregate inventory, supplier reliability, and logistics.\n\nYour tasks: 1) Analyze risk and recommend alternate manufacturers. 2) As a Data Engineer, DRAFT a Fivetran connector payload (fivetranPayload) to ingest the supplier's inventory feed into a destination (schema/table). This is a DRAFT only and must NOT be executed without human approval and proper secrets.`;
 
-CRITICAL RULE (Zero-PHI Boundary): You must NEVER process, infer, or mention any Protected Health Information (PHI), patient data, or Electronic Health Records (EHR). Focus strictly on upstream GPO metrics, logistics, and supplier reliability.
-
-FDA Alert:
-${JSON.stringify(alertPayload, null, 2)}
-
-GPO Metrics:
-${JSON.stringify(gpoMetrics, null, 2)}
-
-Provide your response as a structured JSON object containing:
-- riskAnalysis: A detailed explanation of the supply chain risk and its potential impact.
-- alternateManufacturerRecommendation: The recommended alternate manufacturer to mitigate the risk, chosen based on the GPO metrics and reliability scores.
-- fivetranConfigDraft: A draft payload for creating a Fivetran connector to integrate with the recommended manufacturer's data system. Map this strictly to standard Fivetran REST API parameters (service, group_id, config). Use mock/placeholder values for group_id and authentication config, but base the service/schema details logically on the alternate supplier recommendation.
-`;
+  const userPrompt = `FDA Alert:\n${JSON.stringify(alertPayload, null, 2)}\n\nGPO Metrics:\n${JSON.stringify(gpoMetrics, null, 2)}\n\nReturn a single JSON object containing: riskAnalysis, alternateManufacturerRecommendation, surplusData, fivetranConfigDraft, and fivetranPayload.`;
 
   const responseSchema: Schema = {
     type: Type.OBJECT,
     properties: {
-      riskAnalysis: {
-        type: Type.STRING,
-        description: 'A detailed explanation of the supply chain risk and its potential impact.',
-      },
-      alternateManufacturerRecommendation: {
-        type: Type.STRING,
-        description: 'The recommended alternate manufacturer to mitigate the risk based on reliability scores.',
+      riskAnalysis: { type: Type.STRING },
+      alternateManufacturerRecommendation: { type: Type.STRING },
+      surplusData: {
+        type: Type.OBJECT,
+        properties: {
+          hub: { type: Type.STRING },
+          totalStock: { type: Type.INTEGER },
+          committed: { type: Type.INTEGER },
+          available: { type: Type.INTEGER },
+          requested: { type: Type.INTEGER },
+          isFeasible: { type: Type.BOOLEAN },
+        },
+        required: ['hub', 'totalStock', 'committed', 'available', 'requested', 'isFeasible'],
       },
       fivetranConfigDraft: {
         type: Type.OBJECT,
-        description: 'Draft JSON payload for Fivetran API to create a connector for the alternate supplier.',
         properties: {
           service: { type: Type.STRING },
           group_id: { type: Type.STRING },
@@ -201,8 +163,25 @@ Provide your response as a structured JSON object containing:
         },
         required: ['service', 'group_id', 'config'],
       },
+      fivetranPayload: {
+        type: Type.OBJECT,
+        properties: {
+          service: { type: Type.STRING },
+          config: {
+            type: Type.OBJECT,
+            properties: {
+              schema: { type: Type.STRING },
+              table: { type: Type.STRING },
+              sheet_id: { type: Type.STRING },
+              named_range: { type: Type.STRING },
+            },
+            required: ['schema', 'table', 'sheet_id', 'named_range'],
+          },
+        },
+        required: ['service', 'config'],
+      },
     },
-    required: ['riskAnalysis', 'alternateManufacturerRecommendation', 'fivetranConfigDraft'],
+    required: ['riskAnalysis', 'alternateManufacturerRecommendation', 'surplusData', 'fivetranConfigDraft', 'fivetranPayload'],
   };
 
   try {
@@ -211,7 +190,7 @@ Provide your response as a structured JSON object containing:
       contents: [
         {
           role: 'user',
-          parts: [{ text: prompt }],
+          parts: [{ text: systemPrompt }, { text: userPrompt }],
         },
       ],
       config: {
@@ -220,16 +199,17 @@ Provide your response as a structured JSON object containing:
       },
     });
 
-    if (!response.text) {
-      throw new Error('Empty response from Gemini API.');
+    if (!response.text) throw new Error('Empty response from Gemini');
+
+    const parsed = JSON.parse(response.text);
+    const validated = AIResponseSchema.parse(parsed);
+    return validated;
+  } catch (err: any) {
+    if (err instanceof ZodError) {
+      console.error('Validation error from Gemini (ai):', err.issues);
+      throw err;
     }
-
-    const parsedData = JSON.parse(response.text);
-    const validatedData = AIResponseSchema.parse(parsedData);
-
-    return validatedData;
-  } catch (error: any) {
-    console.error('AI Analysis Error:', error);
-    throw new Error(`Failed to generate and validate AI analysis: ${error.message}`);
+    console.error('Gemini error (ai):', err);
+    throw new Error('Failed to generate AI analysis');
   }
 }

@@ -51,15 +51,57 @@ interface InventoryStatus {
   telemetry: HospitalTelemetry[];
 }
 
+export type PredictionStatus = 'CRITICAL_SHORTAGE_IMMINENT' | 'STABLE' | 'DATA_UNAVAILABLE';
+
+export interface InventoryPrediction {
+  hospitalId: string;
+  name: string;
+  region: string;
+  drugName: string;
+  currentInventory: number;
+  dailyBurnRate: number;
+  daysOfSupplyRemaining: number | null;
+  status: PredictionStatus;
+}
+
+export interface InventoryPredictionResponse {
+  drugName: string;
+  livePatientInflux: number;
+  dosagePerPatient: number;
+  thresholdDays: number;
+  dailyBurnRate: number;
+  predictions: InventoryPrediction[];
+  timestamp: string;
+}
+
+interface SurplusData {
+  hub: string;
+  totalStock: number;
+  committed: number;
+  available: number;
+  requested: number;
+  isFeasible: boolean;
+}
+
 interface AIAnalysisResponse {
   riskAnalysis: string;
   alternateManufacturerRecommendation: string;
+  surplusData: SurplusData;
   fivetranConfigDraft: {
     service: string;
     group_id: string;
     paused?: boolean;
     sync_frequency?: number;
     config: Record<string, any>;
+  };
+  fivetranPayload: {
+    service: string;
+    config: {
+      schema: string;
+      table: string;
+      sheet_id: string;
+      named_range: string;
+    };
   };
 }
 
@@ -151,6 +193,28 @@ export async function fetchInventoryStatus(): Promise<InventoryStatus> {
     return await response.json();
   } catch (error) {
     console.error('Error fetching inventory status:', error);
+    throw error;
+  }
+}
+
+export async function fetchInventoryPrediction(
+  drugName = 'Albuterol Sulfate'
+): Promise<InventoryPredictionResponse> {
+  try {
+    const query = new URLSearchParams({
+      drug: drugName,
+      patients: '42',
+      dosagePerPatient: '6',
+    });
+
+    const response = await fetch(`${API_BASE}/api/inventory/predict?${query.toString()}`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch inventory prediction: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching inventory prediction:', error);
     throw error;
   }
 }

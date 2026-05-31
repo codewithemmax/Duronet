@@ -1,9 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AlertTriangle, TrendingDown, Package } from "lucide-react";
+import type { InventoryPredictionResponse } from "@/lib/api";
 
 interface InventoryItem {
   currentStock: number;
@@ -21,6 +22,7 @@ interface HospitalTelemetry {
 
 interface InventoryMatrixProps {
   telemetry: HospitalTelemetry[];
+  prediction?: InventoryPredictionResponse | null;
   isLoading?: boolean;
   error?: string | null;
 }
@@ -67,9 +69,16 @@ const InventoryMatrixSkeleton: React.FC = () => (
 
 export const InventoryMatrix: React.FC<InventoryMatrixProps> = ({
   telemetry,
+  prediction = null,
   isLoading = false,
   error = null,
 }) => {
+  const predictionMap = useMemo(() => {
+    return new Map(
+      prediction?.predictions.map((entry) => [entry.hospitalId, entry]) ?? []
+    );
+  }, [prediction]);
+
   if (isLoading) {
     return <InventoryMatrixSkeleton />;
   }
@@ -134,50 +143,69 @@ export const InventoryMatrix: React.FC<InventoryMatrixProps> = ({
 
             {/* Table Body */}
             <div className="divide-y divide-[--border-default]">
-              {Object.entries(hospital.inventory).map(([drugName, item]) => (
-                <div
-                  key={drugName}
-                  className="grid grid-cols-5 gap-4 p-4 items-center hover:bg-[--bg-base]/50 transition-colors"
-                >
-                  <div className="text-sm font-medium text-[--text-primary]">
-                    {drugName}
-                  </div>
+              {Object.entries(hospital.inventory).map(([drugName, item]) => {
+                const hospitalPrediction = predictionMap.get(hospital.hospitalId);
+                const isPredictedDrug = drugName === 'Albuterol Sulfate' && hospitalPrediction?.drugName === drugName;
+                const effectiveDailyBurnRate = isPredictedDrug
+                  ? hospitalPrediction.dailyBurnRate
+                  : item.dailyBurnRate;
+                const effectiveDaysOfSupply = isPredictedDrug && hospitalPrediction.daysOfSupplyRemaining !== null
+                  ? hospitalPrediction.daysOfSupplyRemaining
+                  : item.daysOfSupply;
+                const effectiveStatus = isPredictedDrug && hospitalPrediction.status === 'CRITICAL_SHORTAGE_IMMINENT'
+                  ? 'Critical'
+                  : effectiveDaysOfSupply <= 3
+                  ? 'Critical'
+                  : effectiveDaysOfSupply <= 7
+                  ? 'Warning'
+                  : 'Healthy';
 
-                  <div className="text-right">
-                    <div className="text-sm font-semibold text-[--text-primary]">
-                      {item.currentStock.toLocaleString()}
+                return (
+                  <div
+                    key={drugName}
+                    className="grid grid-cols-5 gap-4 p-4 items-center hover:bg-[--bg-base]/50 transition-colors"
+                  >
+                    <div className="text-sm font-medium text-[--text-primary]">
+                      {drugName}
+                      {isPredictedDrug && (
+                        <p className="text-[10px] text-[--text-muted] mt-1">
+                          Live prediction based on current ER patient influx.
+                        </p>
+                      )}
                     </div>
-                    <div className="text-xs text-[--text-muted]">units</div>
-                  </div>
 
-                  <div className="text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <TrendingDown size={16} className="text-[--state-warning]" />
-                      <span className="text-sm font-semibold text-[--text-primary]">
-                        {item.dailyBurnRate}
-                      </span>
+                    <div className="text-right">
+                      <div className="text-sm font-semibold text-[--text-primary]">
+                        {item.currentStock.toLocaleString()}
+                      </div>
+                      <div className="text-xs text-[--text-muted]">units</div>
                     </div>
-                    <div className="text-xs text-[--text-muted]">units/day</div>
-                  </div>
 
-                  <div className="text-right">
-                    <div className="text-sm font-semibold text-[--text-primary]">
-                      {item.daysOfSupply.toFixed(1)}
+                    <div className="text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <TrendingDown size={16} className="text-[--state-warning]" />
+                        <span className="text-sm font-semibold text-[--text-primary]">
+                          {effectiveDailyBurnRate}
+                        </span>
+                      </div>
+                      <div className="text-xs text-[--text-muted]">units/day</div>
                     </div>
-                    <div className="text-xs text-[--text-muted]">days</div>
-                  </div>
 
-                  <div className="text-right">
-                    <Badge variant={getSeverityBadge(item.daysOfSupply)}>
-                      {item.daysOfSupply <= 3
-                        ? "Critical"
-                        : item.daysOfSupply <= 7
-                        ? "Warning"
-                        : "Healthy"}
-                    </Badge>
+                    <div className="text-right">
+                      <div className="text-sm font-semibold text-[--text-primary]">
+                        {effectiveDaysOfSupply.toFixed(1)}
+                      </div>
+                      <div className="text-xs text-[--text-muted]">days</div>
+                    </div>
+
+                    <div className="text-right">
+                      <Badge variant={getSeverityBadge(effectiveDaysOfSupply)}>
+                        {effectiveStatus}
+                      </Badge>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </Card>

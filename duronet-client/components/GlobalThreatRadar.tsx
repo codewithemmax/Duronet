@@ -32,9 +32,10 @@ interface Alert {
 
 interface GlobalThreatRadarProps {
   alerts: Alert[];
+  safeAlertIds?: string[];
 }
 
-export function GlobalThreatRadar({ alerts }: GlobalThreatRadarProps) {
+export function GlobalThreatRadar({ alerts, safeAlertIds = [] }: GlobalThreatRadarProps) {
   // State for map zooming and panning
   const [position, setPosition] = useState({ coordinates: [0, 20] as [number, number], zoom: 1 });
 
@@ -254,36 +255,42 @@ export function GlobalThreatRadar({ alerts }: GlobalThreatRadarProps) {
           })}
 
           {/* Render Main Threat Markers */}
-          {markers.map((marker) => (
-            <Marker 
-              key={marker.id} 
-              coordinates={marker.coordinates}
-              onClick={() => handleThreatClick(marker.coordinates)}
-              style={{
-                default: { outline: "none", cursor: "pointer" },
-                hover: { outline: "none", cursor: "pointer" },
-                pressed: { outline: "none", cursor: "pointer" }
-              }}
-            >
-              {/* The base dot */}
-              <circle r={4 / Math.max(1, position.zoom / 2)} fill="var(--accent-emerald)" />
-              
-              {/* The pulsing ring using Framer Motion */}
-              <motion.circle
-                r={12 / Math.max(1, position.zoom / 2)}
-                fill="transparent"
-                stroke="var(--accent-teal)"
-                strokeWidth={2 / position.zoom}
-                initial={{ scale: 0.5, opacity: 0.8 }}
-                animate={{ scale: 2, opacity: 0 }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeOut",
+          {markers.map((marker) => {
+            const isSafe = safeAlertIds.includes(marker.id);
+            const fillColor = isSafe ? "#10b981" : "#f59e0b";
+            const ringColor = isSafe ? "#6ee7b7" : "#fbbf24";
+
+            return (
+              <Marker 
+                key={marker.id} 
+                coordinates={marker.coordinates}
+                onClick={() => handleThreatClick(marker.coordinates)}
+                style={{
+                  default: { outline: "none", cursor: "pointer" },
+                  hover: { outline: "none", cursor: "pointer" },
+                  pressed: { outline: "none", cursor: "pointer" }
                 }}
-              />
-            </Marker>
-          ))}
+              >
+                {/* The base dot */}
+                <circle r={4 / Math.max(1, position.zoom / 2)} fill={fillColor} />
+                
+                {/* The pulsing ring using Framer Motion */}
+                <motion.circle
+                  r={12 / Math.max(1, position.zoom / 2)}
+                  fill="transparent"
+                  stroke={ringColor}
+                  strokeWidth={2 / position.zoom}
+                  initial={{ scale: 0.5, opacity: 0.8 }}
+                  animate={{ scale: 2, opacity: 0 }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeOut",
+                  }}
+                />
+              </Marker>
+            );
+          })}
         </ZoomableGroup>
       </ComposableMap>
     </div>

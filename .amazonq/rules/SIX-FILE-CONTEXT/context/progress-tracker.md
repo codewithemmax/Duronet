@@ -4,13 +4,13 @@ Update this file after every meaningful implementation change.
 
 ## Current Phase
 
-- **In Progress:** Phase 2 - The AI Engine (Reasoning & Governance)
-- **Current Unit:** Unit 04 - Gemini Reasoning Service ✅ (COMPLETE)
-- **Next Unit:** Unit 05 - Fivetran Configuration Drafter
+- **In Progress:** Phase 5 - Enterprise Polish
+- **Current Unit:** Unit 10 - Smoke & Mirrors UIs (In Progress)
+- **Next Unit:** Final Refinement / Pitch Polish
 
 ## Current Goal
 
-- Execute Unit 05 to expand the Gemini response to draft Fivetran infrastructure-as-code payloads.
+- Build rich SPA mock UIs for the secondary sidebar routes and wire them into the main Dashboard without page reloads.
 
 ## Completed
 
@@ -35,12 +35,35 @@ Update this file after every meaningful implementation change.
 - **Unit 04:** Gemini Reasoning Service (Node.js) ✅
   - `POST /api/ai/analyze-shortage` endpoint integrated
   - `analyzeShortageRisk(shortage, requestedAmount, telemetry)` function implemented
-  - Gemini 1.5 Pro integration with structured JSON schema validation
+  - Gemini integration with structured JSON schema validation
   - Zero-PHI boundary enforced in system prompt
   - Zod validation applied to all responses
   - Returns: surplusData, mitigationStrategy, stakeholdersRequired
+- **Unit 05:** Fivetran Configuration Drafter ✅
+  - Gemini response schema expanded to draft valid Fivetran payloads
+  - Frontend/AJAX deployment flow prepared with config draft support
+- **Unit 06:** AI Action Panel ✅
+  - Governance checklist and manual approval flow implemented
+  - Emergency transfer action panel created with stakeholder notification state
+- **Unit 07:** Live Fivetran API Deployment & Physical Tracking ✅
+  - `/api/deploy` route added to execute Fivetran connector creation
+  - Physical state machine added: Pipeline Deployed → Transfer Authorized → In Transit → Physically Received
+  - Manual dock receipt confirmation required before alert resolution
+- **Unit 08:** Predictive Control Tower (Geospatial Map) ✅
+  - `GlobalRadarMap` component added with Leaflet integration
+  - Dark-themed CARTO basemap and dynamic map markers implemented
+  - Map now reflects inventory health at regional hospitals
+- **Unit 09:** Predictive Demand Engine ✅
+  - `GET /api/inventory/predict` endpoint implemented
+  - Frontend `InventoryMatrix` and `GlobalRadarMap` wired to the new predictive endpoint
+  - Live patient influx math now calculates `DaysOfSupplyRemaining` and flags critical shortages
 
 ## In Progress
+
+- **Unit 10:** Smoke & Mirrors UIs
+  - SPA components created for `risk-matrix`, `fivetran`, and `logs`
+  - New components rendered conditionally inside the Dashboard via `activeTab`
+  - High-fidelity Emerald/Teal dark-mode mock UX implemented
 
 
 ## Open Questions
